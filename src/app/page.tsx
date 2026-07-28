@@ -44,17 +44,17 @@ export default function HomePage() {
               Modules
             </a>
             <Link
-              href="/dashboard"
+              href="/signin"
               className="rounded-full bg-white px-4 py-2 font-semibold text-ink transition hover:bg-foam"
             >
-              Open dashboard
+              Sign in
             </Link>
           </nav>
           <Link
-            href="/dashboard"
+            href="/signin"
             className="rounded-full bg-white px-4 py-2 text-sm font-semibold text-ink md:hidden"
           >
-            Dashboard
+            Sign in
           </Link>
         </div>
       </header>
@@ -76,10 +76,10 @@ export default function HomePage() {
             </p>
             <div className="animate-rise-delay-2 mt-8 flex flex-wrap gap-3">
               <Link
-                href="/dashboard"
+                href="/signin"
                 className="inline-flex items-center gap-2 rounded-full bg-amber px-6 py-3 text-sm font-semibold text-ink transition hover:brightness-105"
               >
-                Enter the platform
+                Sign in to Class 365
                 <ArrowRight size={16} />
               </Link>
               <a
@@ -165,10 +165,10 @@ export default function HomePage() {
           </div>
           <div className="mt-14">
             <Link
-              href="/dashboard"
+              href="/signin"
               className="inline-flex items-center gap-2 rounded-full bg-ink px-6 py-3 text-sm font-semibold text-white transition hover:bg-ink-soft"
             >
-              Launch Class 365 dashboard
+              Launch Class 365
               <ArrowRight size={16} />
             </Link>
           </div>

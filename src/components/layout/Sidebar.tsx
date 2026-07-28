@@ -4,11 +4,18 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Menu, X } from "lucide-react";
 import { useState } from "react";
-import { navSections } from "./nav";
+import { useAuth } from "@/components/auth/AuthProvider";
+import { ROLE_META } from "@/lib/auth";
+import { navForRole } from "./nav";
 
 export function Sidebar() {
   const pathname = usePathname();
+  const { user } = useAuth();
   const [open, setOpen] = useState(false);
+
+  if (!user) return null;
+
+  const sections = navForRole(user.role);
 
   const content = (
     <>
@@ -22,7 +29,7 @@ export function Sidebar() {
       </div>
 
       <nav className="space-y-6 overflow-y-auto pb-8">
-        {navSections.map((section) => (
+        {sections.map((section) => (
           <div key={section.label}>
             <p className="mb-2 px-2 text-[11px] font-semibold tracking-[0.16em] text-white/40 uppercase">
               {section.label}
@@ -79,7 +86,7 @@ export function Sidebar() {
         <div className="mt-auto rounded-2xl border border-white/10 bg-white/5 p-4">
           <p className="text-sm font-medium text-white">Harbor Academy</p>
           <p className="mt-1 text-xs text-white/55">
-            Spring 2026 · Unified campus workspace
+            Signed in as {ROLE_META[user.role].label}
           </p>
         </div>
       </aside>

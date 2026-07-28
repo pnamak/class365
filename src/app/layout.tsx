@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Fraunces, Sora } from "next/font/google";
+import { AuthProvider } from "@/components/auth/AuthProvider";
 import "./globals.css";
 
 const sora = Sora({
@@ -27,7 +28,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className={`${sora.variable} ${fraunces.variable} h-full`}>
-      <body className="min-h-full antialiased">{children}</body>
+      <body className="min-h-full antialiased">
+        <AuthProvider>{children}</AuthProvider>
+      </body>
     </html>
   );
 }

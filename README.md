@@ -26,13 +26,27 @@ npm install
 npm run dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000). Use **Enter the platform** or go directly to `/dashboard`.
+Open [http://localhost:3000](http://localhost:3000). Use **Sign in** or go to `/signin`.
+
+### Demo accounts
+
+Password for all roles: `demo123`
+
+| Role | Email |
+| --- | --- |
+| Admin | `admin@class365.edu` |
+| Teacher | `teacher@class365.edu` |
+| Student | `student@class365.edu` |
+| Parent | `parent@class365.edu` |
+
+You can also one-click sign in from the role cards on `/signin`.
 
 ## App routes
 
 | Route | Module |
 | --- | --- |
 | `/` | Marketing landing |
+| `/signin` | Role-based sign in |
 | `/dashboard` | Centralized overview |
 | `/students` | SIS directory |
 | `/enrollment` | Pre-admission |

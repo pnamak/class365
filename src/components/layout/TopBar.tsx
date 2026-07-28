@@ -1,8 +1,22 @@
 "use client";
 
-import { Bell, Search } from "lucide-react";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { Bell, LogOut, Search } from "lucide-react";
+import { useAuth } from "@/components/auth/AuthProvider";
+import { ROLE_META } from "@/lib/auth";
 
 export function TopBar() {
+  const { user, signOut } = useAuth();
+  const router = useRouter();
+
+  if (!user) return null;
+
+  function handleSignOut() {
+    signOut();
+    router.push("/signin");
+  }
+
   return (
     <header className="mb-6 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
       <div className="relative w-full max-w-md pl-12 lg:pl-0">
@@ -27,13 +41,30 @@ export function TopBar() {
         </button>
         <div className="flex items-center gap-3 rounded-2xl border border-line bg-white/80 px-3 py-2">
           <div className="flex h-9 w-9 items-center justify-center rounded-full bg-teal text-sm font-semibold text-white">
-            EH
+            {user.avatar}
           </div>
           <div className="hidden sm:block">
-            <p className="text-sm font-semibold text-ink">Elena Hale</p>
-            <p className="text-xs text-slate">Registrar · Admin</p>
+            <p className="text-sm font-semibold text-ink">{user.name}</p>
+            <p className="text-xs text-slate">
+              {ROLE_META[user.role].label} · {user.title}
+            </p>
           </div>
         </div>
+        <button
+          type="button"
+          onClick={handleSignOut}
+          className="inline-flex items-center gap-2 rounded-2xl border border-line bg-white/80 px-3 py-2.5 text-sm font-semibold text-ink-soft transition hover:bg-white hover:text-ink"
+          aria-label="Sign out"
+        >
+          <LogOut size={16} />
+          <span className="hidden md:inline">Sign out</span>
+        </button>
+        <Link
+          href="/signin"
+          className="hidden text-xs font-semibold text-teal hover:underline xl:inline"
+        >
+          Switch role
+        </Link>
       </div>
     </header>
   );
