@@ -14,7 +14,7 @@ export const students: Student[] = [
   {
     id: "STU-1042",
     name: "Maya Chen",
-    email: "maya.chen@student.atrium.edu",
+    email: "maya.chen@student.class365.edu",
     grade: "11",
     program: "STEM Honors",
     status: "active",
@@ -27,7 +27,7 @@ export const students: Student[] = [
   {
     id: "STU-1098",
     name: "Jordan Blake",
-    email: "jordan.blake@student.atrium.edu",
+    email: "jordan.blake@student.class365.edu",
     grade: "10",
     program: "Arts & Media",
     status: "active",
@@ -40,7 +40,7 @@ export const students: Student[] = [
   {
     id: "STU-1120",
     name: "Aisha Rahman",
-    email: "aisha.rahman@student.atrium.edu",
+    email: "aisha.rahman@student.class365.edu",
     grade: "12",
     program: "International Baccalaureate",
     status: "active",
@@ -53,7 +53,7 @@ export const students: Student[] = [
   {
     id: "STU-1155",
     name: "Leo Park",
-    email: "leo.park@student.atrium.edu",
+    email: "leo.park@student.class365.edu",
     grade: "9",
     program: "General Studies",
     status: "pending",
@@ -66,7 +66,7 @@ export const students: Student[] = [
   {
     id: "STU-0988",
     name: "Sofia Alvarez",
-    email: "sofia.alvarez@alumni.atrium.edu",
+    email: "sofia.alvarez@alumni.class365.edu",
     grade: "Alumni",
     program: "Business Pathway",
     status: "alumni",
@@ -79,7 +79,7 @@ export const students: Student[] = [
   {
     id: "STU-1201",
     name: "Noah Williams",
-    email: "noah.williams@student.atrium.edu",
+    email: "noah.williams@student.class365.edu",
     grade: "11",
     program: "STEM Honors",
     status: "active",

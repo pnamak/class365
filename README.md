@@ -1,6 +1,6 @@
-# Atrium — Cloud Education Management Platform
+# Class 365 — Cloud Education Management Platform
 
-Atrium unifies a **Student Information System (SIS)**, **Learning Management System (LMS)**, and **Customer Relationship Management (CRM)** into one centralized campus dashboard.
+Class 365 unifies a **Student Information System (SIS)**, **Learning Management System (LMS)**, and **Customer Relationship Management (CRM)** into one centralized campus dashboard.
 
 ## Features
 

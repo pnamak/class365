@@ -15,9 +15,9 @@ const fraunces = Fraunces({
 });
 
 export const metadata: Metadata = {
-  title: "Atrium — Cloud Education Management Platform",
+  title: "Class 365 — Cloud Education Management Platform",
   description:
-    "Unify SIS, LMS, and CRM in one campus OS. Enrollment, attendance, gradebook, billing, distance learning, and alumni tracking.",
+    "Unify SIS, LMS, and CRM in one campus platform. Enrollment, attendance, gradebook, billing, distance learning, and alumni tracking.",
 };
 
 export default function RootLayout({

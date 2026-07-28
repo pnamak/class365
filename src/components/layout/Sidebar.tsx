@@ -14,9 +14,9 @@ export function Sidebar() {
     <>
       <div className="mb-8 px-2">
         <Link href="/" className="block" onClick={() => setOpen(false)}>
-          <p className="display text-2xl text-white">Atrium</p>
+          <p className="display text-2xl text-white">Class 365</p>
           <p className="mt-1 text-xs tracking-[0.14em] text-white/55 uppercase">
-            Campus OS
+            Education Platform
           </p>
         </Link>
       </div>

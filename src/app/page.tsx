@@ -35,7 +35,7 @@ export default function HomePage() {
     <div className="min-h-screen">
       <header className="absolute inset-x-0 top-0 z-20">
         <div className="mx-auto flex max-w-6xl items-center justify-between px-6 py-5">
-          <p className="display text-2xl text-white">Atrium</p>
+          <p className="display text-2xl text-white">Class 365</p>
           <nav className="hidden items-center gap-8 text-sm text-white/85 md:flex">
             <a href="#platform" className="hover:text-white">
               Platform
@@ -64,7 +64,7 @@ export default function HomePage() {
         <div className="relative mx-auto flex min-h-[100svh] max-w-6xl flex-col justify-end px-6 pb-20 pt-32 md:pb-24">
           <div className="max-w-3xl">
             <p className="animate-rise display text-5xl leading-[0.95] sm:text-6xl md:text-7xl lg:text-8xl">
-              Atrium
+              Class 365
             </p>
             <h1 className="animate-rise-delay-1 mt-6 max-w-2xl text-2xl font-medium leading-snug text-white/95 sm:text-3xl md:text-4xl">
               One campus OS for SIS, LMS, and CRM.
@@ -104,7 +104,7 @@ export default function HomePage() {
             Built for the whole student journey
           </h2>
           <p className="mt-4 text-base leading-relaxed text-slate md:text-lg">
-            Atrium connects admissions, academics, finance, and lifelong alumni
+            Class 365 connects admissions, academics, finance, and lifelong alumni
             relationships so every team works from the same source of truth.
           </p>
         </div>
@@ -168,7 +168,7 @@ export default function HomePage() {
               href="/dashboard"
               className="inline-flex items-center gap-2 rounded-full bg-ink px-6 py-3 text-sm font-semibold text-white transition hover:bg-ink-soft"
             >
-              Launch Atrium dashboard
+              Launch Class 365 dashboard
               <ArrowRight size={16} />
             </Link>
           </div>
@@ -176,7 +176,7 @@ export default function HomePage() {
       </section>
 
       <footer className="mx-auto flex max-w-6xl flex-col gap-3 px-6 py-10 text-sm text-slate sm:flex-row sm:items-center sm:justify-between">
-        <p className="display text-xl text-ink">Atrium</p>
+        <p className="display text-xl text-ink">Class 365</p>
         <p>Cloud education management for modern campuses.</p>
       </footer>
     </div>
