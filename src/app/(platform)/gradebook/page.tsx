@@ -39,7 +39,7 @@ export default function GradebookPage() {
               <tr>
                 <th>Student</th>
                 <th>Year</th>
-                <th>Course</th>
+                <th>Class</th>
                 <th>Assessment</th>
                 <th>Scale</th>
                 <th>Result</th>

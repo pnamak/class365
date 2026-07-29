@@ -22,7 +22,7 @@ import {
 } from "@/lib/data";
 import type { SchoolBand, YearLevel } from "@/lib/types";
 
-type SisTab = "directory" | "courses" | "electives";
+type SisTab = "directory" | "classes" | "electives";
 
 export default function StudentsPage() {
   const [tab, setTab] = useState<SisTab>("directory");
@@ -67,7 +67,7 @@ export default function StudentsPage() {
 
   const tabs: { id: SisTab; label: string }[] = [
     { id: "directory", label: "Student directory" },
-    { id: "courses", label: "Courses & credits" },
+    { id: "classes", label: "Classes & credits" },
     { id: "electives", label: "Electives" },
   ];
 
@@ -75,15 +75,15 @@ export default function StudentsPage() {
     <div>
       <PageHeader
         eyebrow="Student Information System (SIS)"
-        title="Students, electives, courses & credits"
-        description="Class 365 handles the administrative load — year-level records, course enrollments, elective requests, and credit progress — so institutions can focus on teaching."
+        title="Students, electives, classes & credits"
+        description="Class 365 handles the administrative load — year-level records, class enrollments, elective requests, and credit progress — so institutions can focus on teaching."
         actions={
           <>
             <button
               type="button"
               className="rounded-full border border-line bg-white px-4 py-2.5 text-sm font-semibold text-ink"
             >
-              Manage enrollments
+              Manage class enrollments
             </button>
             <button
               type="button"
@@ -312,16 +312,16 @@ export default function StudentsPage() {
         </>
       ) : null}
 
-      {tab === "courses" ? (
+      {tab === "classes" ? (
         <section className="panel overflow-hidden">
           <div className="border-b border-line px-6 py-4">
             <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
               <div>
                 <h2 className="display text-2xl text-ink">
-                  Course enrollments & credit load
+                  Class enrollments & credit load
                 </h2>
                 <p className="mt-1 text-sm text-slate">
-                  Core, pathway, and elective courses with credit values
+                  Core, pathway, and elective classes with credit values
                 </p>
               </div>
               <label className="text-sm">
@@ -350,7 +350,7 @@ export default function StudentsPage() {
               <thead>
                 <tr>
                   <th>Student</th>
-                  <th>Course</th>
+                  <th>Class</th>
                   <th>Kind</th>
                   <th>Credits</th>
                   <th>Teacher</th>
@@ -404,7 +404,7 @@ export default function StudentsPage() {
               },
               {
                 title: "Admin handled",
-                copy: "Waitlists, seat frees, and clashes are managed in SIS so teaching stays focused.",
+                copy: "Waitlists, seat frees, and timetable clashes are managed in SIS so teaching stays focused.",
                 icon: School,
               },
             ].map((item) => {

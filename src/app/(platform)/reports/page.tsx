@@ -48,8 +48,8 @@ export default function ReportsPage() {
             Lab Fee and Spring Installment 3.
           </li>
           <li>
-            Online course completion climbed 6% after distance office hours were
-            introduced in CSC-410.
+            Online class completion climbed 6% after distance office hours were
+            introduced in DIG-13.
           </li>
           <li>
             CRM response time improved to 4.2 hours; keep tour follow-ups within

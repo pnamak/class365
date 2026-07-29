@@ -52,7 +52,7 @@ const copyByRole: Record<
     title: "Welcome back, Maya",
     description:
       "Year 11 classes, grades, attendance, and messages from Harbor Academy.",
-    primaryHref: "/courses",
+    primaryHref: "/classes",
     primaryLabel: "My classes",
     secondaryHref: "/communications",
     secondaryLabel: "Messages",
@@ -159,7 +159,7 @@ export default function DashboardPage() {
               accent="teal"
             />
             <StatTile
-              label="Courses"
+              label="Classes"
               value="5"
               hint="Term 2 2026"
               icon={TrendingUp}
@@ -198,7 +198,7 @@ export default function DashboardPage() {
               accent="amber"
             />
             <StatTile
-              label="Courses"
+              label="Classes"
               value="5"
               hint="In progress"
               icon={TrendingUp}
@@ -474,7 +474,7 @@ export default function DashboardPage() {
                         icon: Library,
                       },
                       {
-                        href: "/courses",
+                        href: "/classes",
                         label: "My classes",
                         icon: GraduationCap,
                       },

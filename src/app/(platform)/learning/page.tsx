@@ -34,7 +34,7 @@ export default function LearningPage() {
           },
           {
             title: "Resource hubs",
-            copy: "Assignments, slides, and replays per course section.",
+            copy: "Assignments, slides, and replays per class section.",
             icon: MonitorPlay,
           },
         ].map((item) => {

@@ -10,7 +10,7 @@ import {
 const modules = [
   {
     title: "SIS for students",
-    copy: "Manage electives, courses, and credits with ease — plus guardians, health, and year-level records.",
+    copy: "Manage electives, classes, and credits with ease — plus guardians, health, and year-level records.",
     icon: GraduationCap,
   },
   {
@@ -111,7 +111,7 @@ export default function HomePage() {
           {[
             {
               title: "Know every learner",
-              copy: "SIS records for Kindy–Year 13 — guardians, homerooms, electives, course loads, and credit progress.",
+              copy: "SIS records for Kindy–Year 13 — guardians, homerooms, electives, class loads, and credit progress.",
             },
             {
               title: "Run the school day",

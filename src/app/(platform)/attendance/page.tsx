@@ -61,7 +61,7 @@ export default function AttendancePage() {
               <tr>
                 <th>Student</th>
                 <th>Year level</th>
-                <th>Class / course</th>
+                <th>Class</th>
                 <th>Date</th>
                 <th>Method</th>
                 <th>Status</th>

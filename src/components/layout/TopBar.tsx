@@ -26,7 +26,7 @@ export function TopBar() {
         />
         <input
           type="search"
-          placeholder="Search students, courses, invoices..."
+          placeholder="Search students, classes, invoices..."
           className="w-full rounded-2xl border border-line bg-white/80 py-3 pr-4 pl-12 text-sm outline-none ring-teal/30 transition focus:ring-2 lg:pl-11"
         />
       </div>

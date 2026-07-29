@@ -101,7 +101,7 @@ export const navSections: NavSection[] = [
         roles: ["admin", "teacher", "student", "parent"],
       },
       {
-        href: "/courses",
+        href: "/classes",
         label: "Classes",
         icon: GraduationCap,
         roles: ["admin", "teacher", "student", "parent"],

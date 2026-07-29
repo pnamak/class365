@@ -1439,7 +1439,7 @@ export const reportHighlights = [
     positive: false,
   },
   {
-    label: "Course completion (online)",
+    label: "Class completion (online)",
     value: "88%",
     delta: "+6.0%",
     positive: true,
