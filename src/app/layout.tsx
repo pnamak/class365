@@ -18,7 +18,7 @@ const fraunces = Fraunces({
 export const metadata: Metadata = {
   title: "Class 365 — Cloud Education Management Platform",
   description:
-    "Student management software for Kindy to Year 13 — attendance, grades, communications, student information, and school system integrations.",
+    "Student management software for Kindy to Year 13 schools in Vanuatu — attendance, grades, communications, SIS, and billing in Vanuatu Vatu.",
 };
 
 export default function RootLayout({

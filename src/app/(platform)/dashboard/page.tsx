@@ -18,6 +18,7 @@ import { useAuth } from "@/components/auth/AuthProvider";
 import { PageHeader } from "@/components/ui/PageHeader";
 import { StatTile } from "@/components/ui/StatTile";
 import { StatusPill } from "@/components/ui/StatusPill";
+import { formatVatu, formatVatuCompact } from "@/lib/currency";
 import { ROLE_META, type UserRole } from "@/lib/auth";
 import {
   activityFeed,
@@ -51,7 +52,7 @@ const copyByRole: Record<
   student: {
     title: "Welcome back, Maya",
     description:
-      "Year 11 classes, grades, attendance, and messages from Harbor Academy.",
+      "Year 11 classes, grades, attendance, and messages from Harbour Academy Port Vila.",
     primaryHref: "/classes",
     primaryLabel: "My classes",
     secondaryHref: "/communications",
@@ -60,7 +61,7 @@ const copyByRole: Record<
   parent: {
     title: "Family portal",
     description:
-      "Follow Maya Chen (Year 11) — attendance, grades, messages, and fees.",
+      "Follow Maya Chen (Year 11) — attendance, grades, messages, and fees in VT.",
     primaryHref: "/gradebook",
     primaryLabel: "View grades",
     secondaryHref: "/communications",
@@ -129,12 +130,12 @@ export default function DashboardPage() {
               label={user.role === "admin" ? "Outstanding billing" : "Live sessions"}
               value={
                 user.role === "admin"
-                  ? `$${(dashboardStats.outstandingBilling / 1000).toFixed(0)}k`
+                  ? formatVatuCompact(dashboardStats.outstandingBilling)
                   : String(dashboardStats.liveSessions)
               }
               hint={
                 user.role === "admin"
-                  ? "Invoices pending or overdue"
+                  ? "Invoices pending or overdue (VT)"
                   : "Distance learning today"
               }
               icon={user.role === "admin" ? CreditCard : MonitorPlay}
@@ -192,8 +193,8 @@ export default function DashboardPage() {
             />
             <StatTile
               label="Open balance"
-              value="$2,450"
-              hint="Installment 3 pending"
+              value={formatVatu(85000)}
+              hint="Installment 2 pending"
               icon={CreditCard}
               accent="amber"
             />
@@ -375,18 +376,22 @@ export default function DashboardPage() {
           <section className="panel p-6 lg:col-span-2">
             <h2 className="display text-2xl text-ink">Billing snapshot</h2>
             <p className="mt-1 text-sm text-slate">
-              Tuition and fees for Maya Chen
+              School fees in Vanuatu Vatu for Maya Chen
             </p>
             <div className="mt-5 space-y-3">
               <div className="rounded-2xl border border-line bg-mist/70 px-4 py-4">
                 <p className="font-semibold text-ink">
-                  Spring 2026 Tuition — Installment 3
+                  Term 2 2026 fees — Installment 2
                 </p>
-                <p className="mt-1 text-sm text-slate">Due Jul 20 · $2,450 pending</p>
+                <p className="mt-1 text-sm text-slate">
+                  Due Jul 20 · {formatVatu(85000)} pending
+                </p>
               </div>
               <div className="rounded-2xl border border-line bg-mist/70 px-4 py-4">
-                <p className="font-semibold text-ink">IB Exam Registration</p>
-                <p className="mt-1 text-sm text-slate">Paid Jun 30 · $420</p>
+                <p className="font-semibold text-ink">Senior exam fees</p>
+                <p className="mt-1 text-sm text-slate">
+                  Paid Jun 30 · {formatVatu(15000)}
+                </p>
               </div>
             </div>
           </section>

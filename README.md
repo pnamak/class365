@@ -12,9 +12,12 @@ Class 365 is a cloud education platform structured around the full **Kindy → Y
 - **Library** — catalog, loans, reservations, and overdue tracking
 - **Health records** — immunisations, allergies, medications, visits, care plans
 - **Communication tools** — app, email, SMS, and portal messages by band/year/class/family
-- **Integrations** — Ministry/ENROL, Google/Microsoft Education, NZQA, fees, campus ID
+- **Billing** — school fees and levies in **Vanuatu Vatu (VT)**
+- **Integrations** — MoET Vanuatu, Google/Microsoft Education, assessment feeds, Vatu payments, campus ID
 
-Also included: enrollment CRM, distance learning, billing, alumni, and reporting.
+Also included: enrollment CRM, distance learning, alumni, and reporting.
+
+Localized demo campus: **Harbour Academy Port Vila**, Vanuatu.
 
 ## Stack
 

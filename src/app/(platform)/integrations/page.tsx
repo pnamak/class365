@@ -9,7 +9,7 @@ export default function IntegrationsPage() {
       <PageHeader
         eyebrow="School system integrations"
         title="Connect Class 365 to your stack"
-        description="Keep Kindy–Year 13 student data flowing between government enrollment, productivity suites, assessment feeds, fees, and campus ID systems."
+        description="Keep Kindy–Year 13 student data flowing between MoET Vanuatu, productivity suites, assessment feeds, Vatu fee payments, and campus ID systems."
         actions={
           <button
             type="button"
@@ -24,17 +24,17 @@ export default function IntegrationsPage() {
         {[
           {
             title: "Roster sync",
-            copy: "Push year-level and class memberships to Google, Microsoft, and LMS tools.",
+            copy: "Push year-level and class memberships to Google, Microsoft, and learning tools.",
             icon: RefreshCw,
           },
           {
             title: "Secure identity",
-            copy: "SSO and student ID linking for attendance kiosks and portals.",
+            copy: "SSO and student ID linking for attendance kiosks and parent portals.",
             icon: ShieldCheck,
           },
           {
-            title: "Open connectors",
-            copy: "APIs and webhooks for finance, library, and assessment vendors.",
+            title: "Vatu payments",
+            copy: "Connect local banking rails so school fees settle in Vanuatu Vatu.",
             icon: Link2,
           },
         ].map((item) => {

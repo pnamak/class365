@@ -1,7 +1,9 @@
 import { PageHeader } from "@/components/ui/PageHeader";
 import { StatTile } from "@/components/ui/StatTile";
 import { StatusPill } from "@/components/ui/StatusPill";
+import { formatVatu } from "@/lib/currency";
 import { alumni } from "@/lib/data";
+import { SCHOOL } from "@/lib/locale";
 import { HeartHandshake, MapPinned, Sparkles } from "lucide-react";
 
 export default function AlumniPage() {
@@ -13,7 +15,7 @@ export default function AlumniPage() {
       <PageHeader
         eyebrow="Alumni tracking"
         title="Lifelong campus network"
-        description="Follow careers, engagement, and giving — keeping graduates connected long after commencement."
+        description={`Follow careers, engagement, and giving in Vanuatu Vatu — keeping ${SCHOOL.shortName} graduates connected across Vanuatu and the region.`}
         actions={
           <button
             type="button"
@@ -28,7 +30,7 @@ export default function AlumniPage() {
         <StatTile
           label="Tracked alumni"
           value={String(alumni.length)}
-          hint="Demo cohort"
+          hint={`${SCHOOL.city} cohort`}
           icon={MapPinned}
         />
         <StatTile
@@ -39,7 +41,7 @@ export default function AlumniPage() {
         />
         <StatTile
           label="Giving YTD"
-          value={`$${donated.toLocaleString()}`}
+          value={formatVatu(donated)}
           icon={HeartHandshake}
           accent="amber"
         />
@@ -56,7 +58,7 @@ export default function AlumniPage() {
                 <th>Employer</th>
                 <th>Location</th>
                 <th>Engagement</th>
-                <th>Donated</th>
+                <th>Donated (VT)</th>
               </tr>
             </thead>
             <tbody>
@@ -70,7 +72,9 @@ export default function AlumniPage() {
                   <td>
                     <StatusPill status={person.engagement} />
                   </td>
-                  <td>${person.donated.toLocaleString()}</td>
+                  <td className="font-semibold text-ink">
+                    {formatVatu(person.donated)}
+                  </td>
                 </tr>
               ))}
             </tbody>

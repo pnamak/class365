@@ -5,7 +5,7 @@ import { usePathname } from "next/navigation";
 import { Menu, X } from "lucide-react";
 import { useState } from "react";
 import { useAuth } from "@/components/auth/AuthProvider";
-import { ROLE_META } from "@/lib/auth";
+import { SCHOOL } from "@/lib/locale";
 import { navForRole } from "./nav";
 
 export function Sidebar() {
@@ -84,9 +84,9 @@ export function Sidebar() {
       >
         {content}
         <div className="mt-auto rounded-2xl border border-white/10 bg-white/5 p-4">
-          <p className="text-sm font-medium text-white">Harbor Academy</p>
+          <p className="text-sm font-medium text-white">{SCHOOL.name}</p>
           <p className="mt-1 text-xs text-white/55">
-            Signed in as {ROLE_META[user.role].label}
+            Spring term · {SCHOOL.country} · Kindy–Year 13
           </p>
         </div>
       </aside>

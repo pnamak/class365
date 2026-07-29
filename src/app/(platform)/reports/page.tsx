@@ -8,7 +8,7 @@ export default function ReportsPage() {
       <PageHeader
         eyebrow="Reporting"
         title="Campus intelligence"
-        description="Cross-module KPIs spanning enrollment conversion, attendance, tuition collection, online completion, and alumni engagement."
+        description="Cross-module KPIs spanning enrollment conversion, attendance, Vatu fee collection, online completion, and alumni engagement."
         actions={
           <button
             type="button"
@@ -44,8 +44,8 @@ export default function ReportsPage() {
         <h2 className="display text-2xl text-ink">Recommended focus</h2>
         <ul className="mt-4 space-y-3 text-sm leading-relaxed text-slate">
           <li>
-            Tuition collection dipped 2.3% — prioritize overdue notices for Arts
-            Lab Fee and Spring Installment 3.
+            School fee collection dipped 2.3% — prioritize overdue notices for the
+            arts materials levy and Term 2 Installment 2 (VT).
           </li>
           <li>
             Online class completion climbed 6% after distance office hours were

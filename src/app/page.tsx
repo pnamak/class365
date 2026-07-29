@@ -25,7 +25,7 @@ const modules = [
   },
   {
     title: "Communications & integrations",
-    copy: "Family messaging plus connectors for Ministry, Google/Microsoft, and NZQA.",
+    copy: "Family messaging plus MoET Vanuatu, Google/Microsoft, and Vatu fee gateways.",
     icon: LineChart,
   },
 ];
@@ -119,7 +119,7 @@ export default function HomePage() {
             },
             {
               title: "Connect your systems",
-              copy: "Integrate government enrollment, productivity suites, assessment feeds, fees, and campus ID tools.",
+              copy: "Integrate MoET Vanuatu, productivity suites, assessment feeds, Vatu fee payments, and campus ID tools.",
             },
           ].map((item) => (
             <div key={item.title} className="border-t border-line pt-6">
