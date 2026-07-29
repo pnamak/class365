@@ -2,16 +2,17 @@
 
 import Link from "next/link";
 import {
+  CalendarDays,
   ClipboardCheck,
   CreditCard,
   GraduationCap,
+  HeartPulse,
+  Library,
   MessagesSquare,
   MonitorPlay,
-  Plug,
+  Share2,
   TrendingUp,
   UserPlus,
-  Users,
-  UsersRound,
 } from "lucide-react";
 import { useAuth } from "@/components/auth/AuthProvider";
 import { PageHeader } from "@/components/ui/PageHeader";
@@ -397,30 +398,43 @@ export default function DashboardPage() {
             {(user.role === "admin"
               ? [
                   {
+                    href: "/schedule",
+                    label: "Class schedules",
+                    icon: CalendarDays,
+                  },
+                  {
+                    href: "/social",
+                    label: "Social learning",
+                    icon: Share2,
+                  },
+                  {
+                    href: "/library",
+                    label: "Library",
+                    icon: Library,
+                  },
+                  {
+                    href: "/health",
+                    label: "Health records",
+                    icon: HeartPulse,
+                  },
+                  {
                     href: "/attendance",
                     label: "Attendance tracking",
                     icon: ClipboardCheck,
-                  },
-                  {
-                    href: "/gradebook",
-                    label: "Grade management",
-                    icon: TrendingUp,
                   },
                   {
                     href: "/communications",
                     label: "Communications",
                     icon: MessagesSquare,
                   },
-                  {
-                    href: "/integrations",
-                    label: "School integrations",
-                    icon: Plug,
-                  },
-                  { href: "/crm", label: "Admissions CRM", icon: Users },
-                  { href: "/alumni", label: "Alumni tracking", icon: UsersRound },
                 ]
               : user.role === "teacher"
                 ? [
+                    {
+                      href: "/schedule",
+                      label: "Class schedules",
+                      icon: CalendarDays,
+                    },
                     {
                       href: "/attendance",
                       label: "Attendance",
@@ -432,55 +446,54 @@ export default function DashboardPage() {
                       icon: TrendingUp,
                     },
                     {
-                      href: "/communications",
-                      label: "Communications",
-                      icon: MessagesSquare,
+                      href: "/social",
+                      label: "Social learning",
+                      icon: Share2,
                     },
-                    { href: "/courses", label: "My classes", icon: GraduationCap },
                     {
-                      href: "/learning",
-                      label: "Distance learning",
-                      icon: MonitorPlay,
+                      href: "/health",
+                      label: "Health records",
+                      icon: HeartPulse,
                     },
                   ]
                 : user.role === "student"
                   ? [
                       {
+                        href: "/schedule",
+                        label: "My timetable",
+                        icon: CalendarDays,
+                      },
+                      {
+                        href: "/social",
+                        label: "Social learning",
+                        icon: Share2,
+                      },
+                      {
+                        href: "/library",
+                        label: "Library",
+                        icon: Library,
+                      },
+                      {
                         href: "/courses",
                         label: "My classes",
                         icon: GraduationCap,
                       },
-                      {
-                        href: "/gradebook",
-                        label: "My grades",
-                        icon: TrendingUp,
-                      },
-                      {
-                        href: "/attendance",
-                        label: "Attendance",
-                        icon: ClipboardCheck,
-                      },
-                      {
-                        href: "/communications",
-                        label: "Messages",
-                        icon: MessagesSquare,
-                      },
                     ]
                   : [
                       {
-                        href: "/gradebook",
-                        label: "Grades",
-                        icon: TrendingUp,
+                        href: "/schedule",
+                        label: "Class schedules",
+                        icon: CalendarDays,
                       },
                       {
-                        href: "/attendance",
-                        label: "Attendance",
-                        icon: ClipboardCheck,
+                        href: "/health",
+                        label: "Health records",
+                        icon: HeartPulse,
                       },
                       {
-                        href: "/communications",
-                        label: "Messages",
-                        icon: MessagesSquare,
+                        href: "/library",
+                        label: "Library",
+                        icon: Library,
                       },
                       {
                         href: "/billing",

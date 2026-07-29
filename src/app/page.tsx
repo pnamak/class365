@@ -9,23 +9,23 @@ import {
 
 const modules = [
   {
-    title: "Student information",
-    copy: "Kindy to Year 13 records, guardians, homerooms, and enrollment in one SIS.",
+    title: "Student information & health",
+    copy: "Kindy–Year 13 records, guardians, health notes, and enrollment in one SIS.",
     icon: GraduationCap,
   },
   {
-    title: "Attendance & grades",
-    copy: "Daily rolls, OTJs, and NCEA-ready grade management across every year level.",
+    title: "Schedules, attendance & grades",
+    copy: "Weekly timetables, daily rolls, and assessment from OTJs to NCEA.",
     icon: BookOpenCheck,
   },
   {
-    title: "Communications",
-    copy: "Reach families by band, year, class, or household via app, email, and SMS.",
+    title: "Social learning & library",
+    copy: "Peer spaces, clubs, and resource loans that keep campus learning connected.",
     icon: Users,
   },
   {
-    title: "Integrations",
-    copy: "Connect Ministry, Google/Microsoft, NZQA, fees, and campus ID systems.",
+    title: "Communications & integrations",
+    copy: "Family messaging plus connectors for Ministry, Google/Microsoft, and NZQA.",
     icon: LineChart,
   },
 ];
@@ -70,8 +70,8 @@ export default function HomePage() {
               Student management for Kindy to Year 13.
             </h1>
             <p className="animate-rise-delay-2 mt-5 max-w-xl text-base leading-relaxed text-white/80 md:text-lg">
-              Attendance, grades, communications, student information, and school
-              system integrations — unified for Early Childhood through Secondary.
+              Attendance, grades, schedules, social learning, library, health
+              records, and school system integrations — Kindy through Year 13.
             </p>
             <div className="animate-rise-delay-2 mt-8 flex flex-wrap gap-3">
               <Link

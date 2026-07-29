@@ -172,3 +172,66 @@ export interface Integration {
   status: IntegrationStatus;
   lastSync: string;
 }
+
+export type SocialPostType = "discussion" | "project" | "peer-review" | "club";
+export type LibraryItemStatus = "available" | "on-loan" | "overdue" | "reserved";
+export type HealthRecordType =
+  | "immunization"
+  | "allergy"
+  | "medication"
+  | "visit"
+  | "plan";
+export type Weekday =
+  | "Monday"
+  | "Tuesday"
+  | "Wednesday"
+  | "Thursday"
+  | "Friday";
+
+export interface SocialPost {
+  id: string;
+  title: string;
+  author: string;
+  yearLevel: YearLevel | "Staff" | "All years";
+  type: SocialPostType;
+  space: string;
+  replies: number;
+  likes: number;
+  updatedAt: string;
+}
+
+export interface LibraryItem {
+  id: string;
+  title: string;
+  author: string;
+  category: string;
+  yearLevels: YearLevel[];
+  status: LibraryItemStatus;
+  borrower: string;
+  dueDate: string;
+}
+
+export interface HealthRecord {
+  id: string;
+  studentName: string;
+  yearLevel: YearLevel;
+  type: HealthRecordType;
+  summary: string;
+  recordedBy: string;
+  recordedAt: string;
+  severity: "low" | "medium" | "high" | "info";
+  privateNote: boolean;
+}
+
+export interface ClassPeriod {
+  id: string;
+  day: Weekday;
+  period: string;
+  startTime: string;
+  endTime: string;
+  course: string;
+  teacher: string;
+  room: string;
+  yearLevels: YearLevel[];
+  band: SchoolBand;
+}

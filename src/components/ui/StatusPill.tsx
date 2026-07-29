@@ -33,9 +33,21 @@ const styles: Record<string, { bg: string; color: string }> = {
   connected: { bg: "rgba(20,184,166,0.15)", color: "#0f766e" },
   syncing: { bg: "rgba(232,163,23,0.18)", color: "#b7791f" },
   error: { bg: "rgba(224,122,95,0.18)", color: "#c0564a" },
-  available: { bg: "rgba(98,125,152,0.15)", color: "#486581" },
+  available: { bg: "rgba(20,184,166,0.15)", color: "#0f766e" },
   sent: { bg: "rgba(20,184,166,0.15)", color: "#0f766e" },
   scheduled: { bg: "rgba(43,145,216,0.15)", color: "#186faf" },
+  discussion: { bg: "rgba(43,145,216,0.15)", color: "#186faf" },
+  project: { bg: "rgba(20,184,166,0.15)", color: "#0f766e" },
+  "peer-review": { bg: "rgba(232,163,23,0.18)", color: "#b7791f" },
+  club: { bg: "rgba(16,42,67,0.1)", color: "#102a43" },
+  "on-loan": { bg: "rgba(43,145,216,0.15)", color: "#186faf" },
+  reserved: { bg: "rgba(232,163,23,0.18)", color: "#b7791f" },
+  immunization: { bg: "rgba(20,184,166,0.15)", color: "#0f766e" },
+  allergy: { bg: "rgba(224,122,95,0.18)", color: "#c0564a" },
+  medication: { bg: "rgba(232,163,23,0.18)", color: "#b7791f" },
+  visit: { bg: "rgba(43,145,216,0.15)", color: "#186faf" },
+  plan: { bg: "rgba(16,42,67,0.1)", color: "#102a43" },
+  info: { bg: "rgba(98,125,152,0.15)", color: "#486581" },
 };
 
 export function StatusPill({ status }: { status: string }) {

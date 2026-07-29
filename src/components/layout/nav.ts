@@ -1,14 +1,18 @@
 import {
   BookOpen,
+  CalendarDays,
   ClipboardCheck,
   CreditCard,
   GraduationCap,
+  HeartPulse,
   LayoutDashboard,
+  Library,
   LineChart,
   MessagesSquare,
   MonitorPlay,
   Plug,
   School,
+  Share2,
   Users,
   UserPlus,
   UsersRound,
@@ -74,6 +78,12 @@ export const navSections: NavSection[] = [
         roles: ["admin", "teacher", "student", "parent"],
       },
       {
+        href: "/health",
+        label: "Health records",
+        icon: HeartPulse,
+        roles: ["admin", "teacher", "parent"],
+      },
+      {
         href: "/communications",
         label: "Communications",
         icon: MessagesSquare,
@@ -82,12 +92,30 @@ export const navSections: NavSection[] = [
     ],
   },
   {
-    label: "Learning",
+    label: "Learning & campus",
     items: [
+      {
+        href: "/schedule",
+        label: "Class schedules",
+        icon: CalendarDays,
+        roles: ["admin", "teacher", "student", "parent"],
+      },
       {
         href: "/courses",
         label: "Classes",
         icon: GraduationCap,
+        roles: ["admin", "teacher", "student", "parent"],
+      },
+      {
+        href: "/social",
+        label: "Social learning",
+        icon: Share2,
+        roles: ["admin", "teacher", "student"],
+      },
+      {
+        href: "/library",
+        label: "Library",
+        icon: Library,
         roles: ["admin", "teacher", "student", "parent"],
       },
       {

@@ -7,6 +7,10 @@ Class 365 is a cloud education platform structured around the full **Kindy → Y
 - **Student information management** — year level, band, homeroom, guardians, pastoral care
 - **Attendance tracking** — auto, biometric, and manual rolls by year level
 - **Grade management** — OTJs / learning stories, numeric marks, NCEA standards
+- **Class schedules** — weekly timetable by band, period, room, and teacher
+- **Social learning** — discussions, peer review, projects, and clubs
+- **Library** — catalog, loans, reservations, and overdue tracking
+- **Health records** — immunisations, allergies, medications, visits, care plans
 - **Communication tools** — app, email, SMS, and portal messages by band/year/class/family
 - **Integrations** — Ministry/ENROL, Google/Microsoft Education, NZQA, fees, campus ID
 
@@ -50,8 +54,12 @@ Password for all roles: `demo123`
 | `/enrollment` | Pre-admission |
 | `/attendance` | Attendance tracking |
 | `/gradebook` | Grade management |
+| `/health` | Health records |
 | `/communications` | Family / school messaging |
+| `/schedule` | Class schedules |
 | `/courses` | Classes by year level |
+| `/social` | Social learning |
+| `/library` | Library & loans |
 | `/learning` | Distance learning |
 | `/crm` | Admissions CRM |
 | `/billing` | Tuition & fees |
