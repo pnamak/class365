@@ -31,10 +31,13 @@ interface AuthContextValue {
 
 const AuthContext = createContext<AuthContextValue | null>(null);
 
-function readStoredUser(): SafeUser | null {
+/** Cached snapshot so useSyncExternalStore gets a stable Object.is reference. */
+let cachedRaw: string | null | undefined;
+let cachedUser: SafeUser | null = null;
+
+function parseUser(raw: string | null): SafeUser | null {
+  if (!raw) return null;
   try {
-    const raw = localStorage.getItem(AUTH_STORAGE_KEY);
-    if (!raw) return null;
     const parsed = JSON.parse(raw) as SafeUser;
     const stillValid = DEMO_USERS.some((u) => u.id === parsed.id);
     if (!stillValid) {
@@ -48,8 +51,19 @@ function readStoredUser(): SafeUser | null {
   }
 }
 
+function readStoredUser(): SafeUser | null {
+  const raw = localStorage.getItem(AUTH_STORAGE_KEY);
+  if (raw === cachedRaw) return cachedUser;
+  cachedRaw = raw;
+  cachedUser = parseUser(raw);
+  return cachedUser;
+}
+
 function subscribe(onStoreChange: () => void) {
-  const handler = () => onStoreChange();
+  const handler = () => {
+    cachedRaw = undefined;
+    onStoreChange();
+  };
   window.addEventListener("storage", handler);
   window.addEventListener(AUTH_EVENT, handler);
   return () => {
@@ -77,13 +91,14 @@ function getServerReady() {
 function persist(next: SafeUser | null) {
   if (next) localStorage.setItem(AUTH_STORAGE_KEY, JSON.stringify(next));
   else localStorage.removeItem(AUTH_STORAGE_KEY);
+  cachedRaw = undefined;
   window.dispatchEvent(new Event(AUTH_EVENT));
 }
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const user = useSyncExternalStore(subscribe, getSnapshot, getServerSnapshot);
   const ready = useSyncExternalStore(
-    subscribe,
+    () => () => {},
     getClientReady,
     getServerReady,
   );
