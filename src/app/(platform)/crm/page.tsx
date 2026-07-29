@@ -17,7 +17,7 @@ export default function CrmPage() {
       <PageHeader
         eyebrow="Customer Relationship Management"
         title="Admissions CRM"
-        description="Score and nurture prospective families from first contact through enrollment conversion."
+        description="Score and nurture prospective families for Kindy through Year 13 entry points."
         actions={
           <button
             type="button"
@@ -48,6 +48,7 @@ export default function CrmPage() {
             <thead>
               <tr>
                 <th>Lead</th>
+                <th>Year level</th>
                 <th>Source</th>
                 <th>Interest</th>
                 <th>Score</th>
@@ -62,6 +63,7 @@ export default function CrmPage() {
                     <p className="font-medium text-ink">{lead.name}</p>
                     <p className="text-xs text-slate">{lead.email}</p>
                   </td>
+                  <td>{lead.yearLevel}</td>
                   <td>{lead.source}</td>
                   <td>{lead.interest}</td>
                   <td>

@@ -1,16 +1,16 @@
-# Class 365 — Cloud Education Management Platform
+# Class 365 — Student Management for Kindy to Year 13
 
-Class 365 unifies a **Student Information System (SIS)**, **Learning Management System (LMS)**, and **Customer Relationship Management (CRM)** into one centralized campus dashboard.
+Class 365 is a cloud education platform structured around the full **Kindy → Year 13** pathway (Early Childhood, Primary, Intermediate, Secondary). It unifies student information, attendance, grade management, communications, LMS, CRM, billing, and school-system integrations.
 
-## Features
+## Key student management features
 
-- **Pre-admission enrollment** — application pipeline from inquiry to enrolled
-- **Automated attendance** — auto, biometric, and manual capture
-- **Gradebook management** — weighted assignments and letter grades
-- **Billing** — tuition installments, fees, and overdue tracking
-- **Reporting** — cross-module campus KPIs
-- **Distance learning** — live sessions tied back to SIS attendance
-- **Alumni tracking** — engagement, careers, and giving
+- **Student information management** — year level, band, homeroom, guardians, pastoral care
+- **Attendance tracking** — auto, biometric, and manual rolls by year level
+- **Grade management** — OTJs / learning stories, numeric marks, NCEA standards
+- **Communication tools** — app, email, SMS, and portal messages by band/year/class/family
+- **Integrations** — Ministry/ENROL, Google/Microsoft Education, NZQA, fees, campus ID
+
+Also included: enrollment CRM, distance learning, billing, alumni, and reporting.
 
 ## Stack
 
@@ -39,8 +39,6 @@ Password for all roles: `demo123`
 | Student | `student@class365.edu` |
 | Parent | `parent@class365.edu` |
 
-You can also one-click sign in from the role cards on `/signin`.
-
 ## App routes
 
 | Route | Module |
@@ -48,15 +46,17 @@ You can also one-click sign in from the role cards on `/signin`.
 | `/` | Marketing landing |
 | `/signin` | Role-based sign in |
 | `/dashboard` | Centralized overview |
-| `/students` | SIS directory |
+| `/students` | Student information (K–13) |
 | `/enrollment` | Pre-admission |
-| `/attendance` | Attendance |
-| `/gradebook` | Grades |
-| `/courses` | LMS catalog |
+| `/attendance` | Attendance tracking |
+| `/gradebook` | Grade management |
+| `/communications` | Family / school messaging |
+| `/courses` | Classes by year level |
 | `/learning` | Distance learning |
 | `/crm` | Admissions CRM |
 | `/billing` | Tuition & fees |
 | `/alumni` | Alumni network |
+| `/integrations` | School system connectors |
 | `/reports` | Analytics |
 
 Demo data lives in `src/lib/data.ts`.

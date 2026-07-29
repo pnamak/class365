@@ -6,17 +6,17 @@ import { CheckCircle2, FileSearch, MessagesSquare } from "lucide-react";
 const steps = [
   {
     title: "Inquiry intake",
-    copy: "Families submit interest forms; CRM scores and routes each lead.",
+    copy: "Families choose Kindy through Year 13 entry points; CRM scores and routes each lead.",
     icon: FileSearch,
   },
   {
     title: "Application review",
-    copy: "Document checklists, interviews, and waitlists stay in one flow.",
+    copy: "Document checklists, interviews, and waitlists stay aligned to year-level capacity.",
     icon: MessagesSquare,
   },
   {
     title: "Auto-enroll",
-    copy: "Accepted applicants become SIS records with billing schedules.",
+    copy: "Accepted applicants become SIS records with homeroom, band, and billing schedules.",
     icon: CheckCircle2,
   },
 ];
@@ -26,8 +26,8 @@ export default function EnrollmentPage() {
     <div>
       <PageHeader
         eyebrow="Pre-admission"
-        title="Enrollment workspace"
-        description="Manage applications from first inquiry through accepted offers — then push clean records into the SIS."
+        title="Enrollment for Kindy–Year 13"
+        description="Manage applications from first inquiry through accepted offers — then push clean year-level records into the SIS."
         actions={
           <button
             type="button"
@@ -65,7 +65,7 @@ export default function EnrollmentPage() {
               <tr>
                 <th>ID</th>
                 <th>Applicant</th>
-                <th>Program</th>
+                <th>Year level</th>
                 <th>Submitted</th>
                 <th>Completeness</th>
                 <th>Status</th>
@@ -77,7 +77,7 @@ export default function EnrollmentPage() {
                   <td className="font-medium text-ink">{app.id}</td>
                   <td>{app.applicant}</td>
                   <td>
-                    Grade {app.grade} · {app.program}
+                    {app.yearLevel} · {app.program}
                   </td>
                   <td>{app.submittedAt}</td>
                   <td>

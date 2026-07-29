@@ -18,7 +18,7 @@ const fraunces = Fraunces({
 export const metadata: Metadata = {
   title: "Class 365 — Cloud Education Management Platform",
   description:
-    "Unify SIS, LMS, and CRM in one campus platform. Enrollment, attendance, gradebook, billing, distance learning, and alumni tracking.",
+    "Student management software for Kindy to Year 13 — attendance, grades, communications, student information, and school system integrations.",
 };
 
 export default function RootLayout({
@@ -27,7 +27,11 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={`${sora.variable} ${fraunces.variable} h-full`}>
+    <html
+      lang="en"
+      data-scroll-behavior="smooth"
+      className={`${sora.variable} ${fraunces.variable} h-full`}
+    >
       <body className="min-h-full antialiased">
         <AuthProvider>{children}</AuthProvider>
       </body>

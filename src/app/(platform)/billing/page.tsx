@@ -15,7 +15,7 @@ export default function BillingPage() {
       <PageHeader
         eyebrow="Billing"
         title="Tuition & fees"
-        description="Generate invoices, track installments, and surface overdue balances tied to student SIS records."
+        description="Generate invoices, track installments, and surface overdue balances tied to Kindy–Year 13 SIS records."
         actions={
           <button
             type="button"
@@ -54,6 +54,7 @@ export default function BillingPage() {
               <tr>
                 <th>Invoice</th>
                 <th>Student</th>
+                <th>Year</th>
                 <th>Description</th>
                 <th>Due</th>
                 <th>Amount</th>
@@ -65,6 +66,7 @@ export default function BillingPage() {
                 <tr key={invoice.id}>
                   <td className="font-medium text-ink">{invoice.id}</td>
                   <td>{invoice.studentName}</td>
+                  <td>{invoice.yearLevel}</td>
                   <td>{invoice.description}</td>
                   <td>{invoice.dueDate}</td>
                   <td>${invoice.amount.toLocaleString()}</td>

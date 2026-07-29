@@ -6,15 +6,15 @@ export default function CoursesPage() {
   return (
     <div>
       <PageHeader
-        eyebrow="Learning Management System"
-        title="Course catalog"
-        description="Hybrid, in-person, and online sections with roster counts, schedules, and term progress."
+        eyebrow="Classes & learning"
+        title="Class catalog by year level"
+        description="Early learning through senior secondary — each class tagged with year levels, school band, and delivery mode."
         actions={
           <button
             type="button"
             className="rounded-full bg-ink px-4 py-2.5 text-sm font-semibold text-white"
           >
-            Create course
+            Create class
           </button>
         }
       />
@@ -35,6 +35,9 @@ export default function CoursesPage() {
             </div>
             <p className="mt-3 text-sm text-slate">
               {course.teacher} · {course.schedule}
+            </p>
+            <p className="mt-1 text-sm text-slate">
+              {course.band} · {course.yearLevels.join(", ")}
             </p>
             <p className="mt-1 text-sm text-slate">
               {course.students} students · {course.term}

@@ -5,7 +5,9 @@ import {
   GraduationCap,
   LayoutDashboard,
   LineChart,
+  MessagesSquare,
   MonitorPlay,
+  Plug,
   School,
   Users,
   UserPlus,
@@ -45,11 +47,11 @@ export const navSections: NavSection[] = [
     ],
   },
   {
-    label: "SIS",
+    label: "Student management",
     items: [
       {
         href: "/students",
-        label: "Students",
+        label: "Student information",
         icon: School,
         roles: ["admin", "teacher"],
       },
@@ -67,18 +69,24 @@ export const navSections: NavSection[] = [
       },
       {
         href: "/gradebook",
-        label: "Gradebook",
+        label: "Grade management",
         icon: BookOpen,
+        roles: ["admin", "teacher", "student", "parent"],
+      },
+      {
+        href: "/communications",
+        label: "Communications",
+        icon: MessagesSquare,
         roles: ["admin", "teacher", "student", "parent"],
       },
     ],
   },
   {
-    label: "LMS",
+    label: "Learning",
     items: [
       {
         href: "/courses",
-        label: "Courses",
+        label: "Classes",
         icon: GraduationCap,
         roles: ["admin", "teacher", "student", "parent"],
       },
@@ -91,7 +99,7 @@ export const navSections: NavSection[] = [
     ],
   },
   {
-    label: "CRM & Finance",
+    label: "CRM, finance & systems",
     items: [
       {
         href: "/crm",
@@ -109,6 +117,12 @@ export const navSections: NavSection[] = [
         href: "/alumni",
         label: "Alumni",
         icon: UsersRound,
+        roles: ["admin"],
+      },
+      {
+        href: "/integrations",
+        label: "Integrations",
+        icon: Plug,
         roles: ["admin"],
       },
     ],

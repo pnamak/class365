@@ -1,25 +1,27 @@
 import { PageHeader } from "@/components/ui/PageHeader";
 import { grades } from "@/lib/data";
 
-function letterGrade(score: number, max: number) {
-  const pct = (score / max) * 100;
-  if (pct >= 93) return "A";
-  if (pct >= 90) return "A-";
-  if (pct >= 87) return "B+";
-  if (pct >= 83) return "B";
-  if (pct >= 80) return "B-";
-  if (pct >= 77) return "C+";
-  if (pct >= 73) return "C";
-  return "C-";
+function displayScore(entry: (typeof grades)[number]) {
+  if (entry.scale === "otj") {
+    return `${entry.score}/${entry.maxScore} OTJ`;
+  }
+  if (entry.scale === "ncea") {
+    const pct = (entry.score / entry.maxScore) * 100;
+    if (pct >= 90) return "Excellence";
+    if (pct >= 80) return "Merit";
+    if (pct >= 50) return "Achieved";
+    return "Not Achieved";
+  }
+  return `${entry.score}/${entry.maxScore}`;
 }
 
 export default function GradebookPage() {
   return (
     <div>
       <PageHeader
-        eyebrow="Gradebook management"
-        title="Assessments & scoring"
-        description="Weighted assignments across courses with transparent scoring for teachers, students, and advisors."
+        eyebrow="Grade management"
+        title="Assessment across the pathway"
+        description="Learning stories and OTJs for Kindy–Primary, numeric marks for Intermediate, and NCEA standards for Year 11–13 — one gradebook for the whole school."
         actions={
           <button
             type="button"
@@ -36,11 +38,11 @@ export default function GradebookPage() {
             <thead>
               <tr>
                 <th>Student</th>
+                <th>Year</th>
                 <th>Course</th>
-                <th>Assignment</th>
-                <th>Weight</th>
-                <th>Score</th>
-                <th>Letter</th>
+                <th>Assessment</th>
+                <th>Scale</th>
+                <th>Result</th>
               </tr>
             </thead>
             <tbody>
@@ -51,18 +53,21 @@ export default function GradebookPage() {
                     <td className="font-medium text-ink">
                       {entry.studentName}
                     </td>
+                    <td>{entry.yearLevel}</td>
                     <td>{entry.course}</td>
                     <td>
                       <p>{entry.assignment}</p>
                       <p className="text-xs text-slate">
-                        Submitted {entry.submittedAt}
+                        {entry.weight} · {entry.submittedAt}
                       </p>
                     </td>
-                    <td>{entry.weight}</td>
+                    <td className="uppercase text-xs font-semibold tracking-[0.08em] text-slate">
+                      {entry.scale}
+                    </td>
                     <td>
                       <div className="flex items-center gap-3">
-                        <span>
-                          {entry.score}/{entry.maxScore}
+                        <span className="font-semibold text-ink">
+                          {displayScore(entry)}
                         </span>
                         <div className="progress-track w-20">
                           <div
@@ -71,9 +76,6 @@ export default function GradebookPage() {
                           />
                         </div>
                       </div>
-                    </td>
-                    <td className="font-semibold text-ink">
-                      {letterGrade(entry.score, entry.maxScore)}
                     </td>
                   </tr>
                 );

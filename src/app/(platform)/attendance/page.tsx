@@ -1,8 +1,8 @@
 import { PageHeader } from "@/components/ui/PageHeader";
 import { StatTile } from "@/components/ui/StatTile";
 import { StatusPill } from "@/components/ui/StatusPill";
-import { attendance } from "@/lib/data";
-import { Fingerprint, Radar, ScanLine } from "lucide-react";
+import { attendance, yearLevelCensus } from "@/lib/data";
+import { Fingerprint, Radar, ScanLine, School } from "lucide-react";
 
 export default function AttendancePage() {
   const present = attendance.filter((a) => a.status === "present").length;
@@ -13,22 +13,22 @@ export default function AttendancePage() {
   return (
     <div>
       <PageHeader
-        eyebrow="Automated attendance"
-        title="Daily attendance sync"
-        description="Capture presence via auto roster sync, biometric check-in, or manual override — then push alerts to advisors."
+        eyebrow="Attendance tracking"
+        title="Daily rolls from Kindy to Year 13"
+        description="Capture presence by year level and class — auto sync, biometric check-in, or manual override — then alert pastoral care and families."
         actions={
           <button
             type="button"
             className="rounded-full bg-teal px-4 py-2.5 text-sm font-semibold text-white"
           >
-            Run sync now
+            Run campus sync
           </button>
         }
       />
 
-      <div className="mb-6 grid gap-4 sm:grid-cols-3">
+      <div className="mb-6 grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
         <StatTile
-          label="Present (sample day)"
+          label="Present (sample)"
           value={String(present)}
           icon={ScanLine}
         />
@@ -46,6 +46,12 @@ export default function AttendancePage() {
           icon={Fingerprint}
           accent="amber"
         />
+        <StatTile
+          label="Year levels tracked"
+          value={String(yearLevelCensus.length)}
+          hint="Kindy through Year 13"
+          icon={School}
+        />
       </div>
 
       <section className="panel overflow-hidden">
@@ -54,7 +60,8 @@ export default function AttendancePage() {
             <thead>
               <tr>
                 <th>Student</th>
-                <th>Course</th>
+                <th>Year level</th>
+                <th>Class / course</th>
                 <th>Date</th>
                 <th>Method</th>
                 <th>Status</th>
@@ -64,6 +71,7 @@ export default function AttendancePage() {
               {attendance.map((row) => (
                 <tr key={row.id}>
                   <td className="font-medium text-ink">{row.studentName}</td>
+                  <td>{row.yearLevel}</td>
                   <td>{row.course}</td>
                   <td>{row.date}</td>
                   <td className="capitalize">{row.method}</td>

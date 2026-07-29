@@ -30,6 +30,12 @@ const styles: Record<string, { bg: string; color: string }> = {
   "in-person": { bg: "rgba(16,42,67,0.1)", color: "#102a43" },
   hybrid: { bg: "rgba(20,184,166,0.15)", color: "#0f766e" },
   online: { bg: "rgba(43,145,216,0.15)", color: "#186faf" },
+  connected: { bg: "rgba(20,184,166,0.15)", color: "#0f766e" },
+  syncing: { bg: "rgba(232,163,23,0.18)", color: "#b7791f" },
+  error: { bg: "rgba(224,122,95,0.18)", color: "#c0564a" },
+  available: { bg: "rgba(98,125,152,0.15)", color: "#486581" },
+  sent: { bg: "rgba(20,184,166,0.15)", color: "#0f766e" },
+  scheduled: { bg: "rgba(43,145,216,0.15)", color: "#186faf" },
 };
 
 export function StatusPill({ status }: { status: string }) {

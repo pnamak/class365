@@ -65,7 +65,8 @@ export default function LearningPage() {
                   <StatusPill status={session.status} />
                 </div>
                 <p className="mt-1 text-sm text-slate">
-                  {session.course} · Hosted by {session.host}
+                  {session.course} · {session.yearLevels.join(", ")} ·{" "}
+                  {session.host}
                 </p>
               </div>
               <div className="text-sm text-slate">

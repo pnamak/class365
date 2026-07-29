@@ -9,23 +9,23 @@ import {
 
 const modules = [
   {
-    title: "Student Information",
-    copy: "Records, enrollment pipelines, and automated attendance in one SIS core.",
+    title: "Student information",
+    copy: "Kindy to Year 13 records, guardians, homerooms, and enrollment in one SIS.",
     icon: GraduationCap,
   },
   {
-    title: "Learning Management",
-    copy: "Courses, gradebooks, and live distance sessions for hybrid campuses.",
+    title: "Attendance & grades",
+    copy: "Daily rolls, OTJs, and NCEA-ready grade management across every year level.",
     icon: BookOpenCheck,
   },
   {
-    title: "Admissions CRM",
-    copy: "Guide families from inquiry to enrolled — then keep alumni engaged.",
+    title: "Communications",
+    copy: "Reach families by band, year, class, or household via app, email, and SMS.",
     icon: Users,
   },
   {
-    title: "Billing & Reporting",
-    copy: "Tuition workflows and campus-wide insights without leaving the dashboard.",
+    title: "Integrations",
+    copy: "Connect Ministry, Google/Microsoft, NZQA, fees, and campus ID systems.",
     icon: LineChart,
   },
 ];
@@ -67,12 +67,11 @@ export default function HomePage() {
               Class 365
             </p>
             <h1 className="animate-rise-delay-1 mt-6 max-w-2xl text-2xl font-medium leading-snug text-white/95 sm:text-3xl md:text-4xl">
-              One campus OS for SIS, LMS, and CRM.
+              Student management for Kindy to Year 13.
             </h1>
             <p className="animate-rise-delay-2 mt-5 max-w-xl text-base leading-relaxed text-white/80 md:text-lg">
-              Pre-admission to alumni — enrollment, attendance, gradebooks,
-              billing, distance learning, and reporting in a single cloud
-              workspace.
+              Attendance, grades, communications, student information, and school
+              system integrations — unified for Early Childhood through Secondary.
             </p>
             <div className="animate-rise-delay-2 mt-8 flex flex-wrap gap-3">
               <Link
@@ -101,26 +100,26 @@ export default function HomePage() {
             Centralized operations
           </p>
           <h2 className="display mt-3 text-4xl text-ink md:text-5xl">
-            Built for the whole student journey
+            Built for Kindy through Year 13
           </h2>
           <p className="mt-4 text-base leading-relaxed text-slate md:text-lg">
-            Class 365 connects admissions, academics, finance, and lifelong alumni
-            relationships so every team works from the same source of truth.
+            One student management platform for Early Childhood, Primary,
+            Intermediate, and Secondary — with the tools schools expect day to day.
           </p>
         </div>
         <div className="mt-12 grid gap-6 md:grid-cols-3">
           {[
             {
-              title: "Before day one",
-              copy: "Capture inquiries, schedule tours, review applications, and convert accepted students into enrolled records automatically.",
+              title: "Know every learner",
+              copy: "Student information, guardians, homerooms, and year-level capacity from Kindy intake to Year 13 leavers.",
             },
             {
-              title: "During the term",
-              copy: "Run courses, sync attendance, publish grades, host live distance sessions, and keep tuition billing current.",
+              title: "Run the school day",
+              copy: "Track attendance, manage grades, message families, and keep classes in sync across every band.",
             },
             {
-              title: "After graduation",
-              copy: "Track alumni engagement, careers, and giving — without spinning up a separate system.",
+              title: "Connect your systems",
+              copy: "Integrate government enrollment, productivity suites, assessment feeds, fees, and campus ID tools.",
             },
           ].map((item) => (
             <div key={item.title} className="border-t border-line pt-6">
@@ -140,7 +139,7 @@ export default function HomePage() {
               Unified modules
             </p>
             <h2 className="display mt-3 text-4xl text-ink md:text-5xl">
-              SIS + LMS + CRM, finally together
+              The student management essentials
             </h2>
           </div>
           <div className="mt-12 grid gap-8 sm:grid-cols-2">

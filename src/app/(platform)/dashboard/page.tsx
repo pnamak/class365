@@ -5,7 +5,9 @@ import {
   ClipboardCheck,
   CreditCard,
   GraduationCap,
+  MessagesSquare,
   MonitorPlay,
+  Plug,
   TrendingUp,
   UserPlus,
   Users,
@@ -28,40 +30,40 @@ const copyByRole: Record<
   { title: string; description: string; primaryHref: string; primaryLabel: string; secondaryHref: string; secondaryLabel: string }
 > = {
   admin: {
-    title: "Campus pulse for Harbor Academy",
+    title: "Kindy–Year 13 campus pulse",
     description:
-      "SIS, LMS, and CRM signals in one view — from today’s attendance to open enrollments and live distance sessions.",
-    primaryHref: "/enrollment",
-    primaryLabel: "Review enrollments",
-    secondaryHref: "/reports",
-    secondaryLabel: "Open reports",
+      "Student management across Early Childhood to Secondary — attendance, grades, communications, enrollments, and integrations.",
+    primaryHref: "/students",
+    primaryLabel: "Student information",
+    secondaryHref: "/communications",
+    secondaryLabel: "Message families",
   },
   teacher: {
     title: "Your teaching workspace",
     description:
-      "Today’s classes, attendance sync, gradebook updates, and live distance sessions in one place.",
+      "Attendance, grade management, class lists, and family communications for your year levels.",
     primaryHref: "/gradebook",
-    primaryLabel: "Open gradebook",
+    primaryLabel: "Grade management",
     secondaryHref: "/attendance",
     secondaryLabel: "Take attendance",
   },
   student: {
     title: "Welcome back, Maya",
     description:
-      "Check your courses, grades, attendance, and upcoming distance learning sessions.",
+      "Year 11 classes, grades, attendance, and messages from Harbor Academy.",
     primaryHref: "/courses",
-    primaryLabel: "My courses",
-    secondaryHref: "/learning",
-    secondaryLabel: "Join live class",
+    primaryLabel: "My classes",
+    secondaryHref: "/communications",
+    secondaryLabel: "Messages",
   },
   parent: {
     title: "Family portal",
     description:
-      "Follow Maya Chen’s attendance, grades, courses, and tuition status at Harbor Academy.",
+      "Follow Maya Chen (Year 11) — attendance, grades, messages, and fees.",
     primaryHref: "/gradebook",
     primaryLabel: "View grades",
-    secondaryHref: "/billing",
-    secondaryLabel: "View billing",
+    secondaryHref: "/communications",
+    secondaryLabel: "School messages",
   },
 };
 
@@ -104,7 +106,7 @@ export default function DashboardPage() {
             <StatTile
               label="Active students"
               value={dashboardStats.activeStudents.toLocaleString()}
-              hint="Across all programs"
+              hint={dashboardStats.yearSpan}
               icon={GraduationCap}
               accent="teal"
             />
@@ -145,7 +147,7 @@ export default function DashboardPage() {
             <StatTile
               label="GPA"
               value="3.92"
-              hint="STEM Honors"
+              hint="Year 11 · NCEA STEM"
               icon={GraduationCap}
             />
             <StatTile
@@ -158,7 +160,7 @@ export default function DashboardPage() {
             <StatTile
               label="Courses"
               value="5"
-              hint="Spring 2026"
+              hint="Term 2 2026"
               icon={TrendingUp}
               accent="amber"
             />
@@ -239,7 +241,7 @@ export default function DashboardPage() {
                         <p className="text-xs text-slate">{app.id}</p>
                       </td>
                       <td>
-                        Grade {app.grade} · {app.program}
+                        {app.yearLevel} · {app.program}
                       </td>
                       <td>
                         <StatusPill status={app.status} />
@@ -394,18 +396,27 @@ export default function DashboardPage() {
           <div className="mt-5 space-y-2">
             {(user.role === "admin"
               ? [
-                  { href: "/crm", label: "Admissions CRM", icon: Users },
                   {
                     href: "/attendance",
-                    label: "Automated attendance",
+                    label: "Attendance tracking",
                     icon: ClipboardCheck,
                   },
-                  { href: "/gradebook", label: "Gradebook", icon: TrendingUp },
                   {
-                    href: "/learning",
-                    label: "Distance learning",
-                    icon: MonitorPlay,
+                    href: "/gradebook",
+                    label: "Grade management",
+                    icon: TrendingUp,
                   },
+                  {
+                    href: "/communications",
+                    label: "Communications",
+                    icon: MessagesSquare,
+                  },
+                  {
+                    href: "/integrations",
+                    label: "School integrations",
+                    icon: Plug,
+                  },
+                  { href: "/crm", label: "Admissions CRM", icon: Users },
                   { href: "/alumni", label: "Alumni tracking", icon: UsersRound },
                 ]
               : user.role === "teacher"
@@ -415,8 +426,17 @@ export default function DashboardPage() {
                       label: "Attendance",
                       icon: ClipboardCheck,
                     },
-                    { href: "/gradebook", label: "Gradebook", icon: TrendingUp },
-                    { href: "/courses", label: "My courses", icon: GraduationCap },
+                    {
+                      href: "/gradebook",
+                      label: "Grade management",
+                      icon: TrendingUp,
+                    },
+                    {
+                      href: "/communications",
+                      label: "Communications",
+                      icon: MessagesSquare,
+                    },
+                    { href: "/courses", label: "My classes", icon: GraduationCap },
                     {
                       href: "/learning",
                       label: "Distance learning",
@@ -427,7 +447,7 @@ export default function DashboardPage() {
                   ? [
                       {
                         href: "/courses",
-                        label: "My courses",
+                        label: "My classes",
                         icon: GraduationCap,
                       },
                       {
@@ -441,9 +461,9 @@ export default function DashboardPage() {
                         icon: ClipboardCheck,
                       },
                       {
-                        href: "/learning",
-                        label: "Live classes",
-                        icon: MonitorPlay,
+                        href: "/communications",
+                        label: "Messages",
+                        icon: MessagesSquare,
                       },
                     ]
                   : [
@@ -458,14 +478,14 @@ export default function DashboardPage() {
                         icon: ClipboardCheck,
                       },
                       {
+                        href: "/communications",
+                        label: "Messages",
+                        icon: MessagesSquare,
+                      },
+                      {
                         href: "/billing",
                         label: "Billing",
                         icon: CreditCard,
-                      },
-                      {
-                        href: "/courses",
-                        label: "Courses",
-                        icon: GraduationCap,
                       },
                     ]
             ).map((link) => {
