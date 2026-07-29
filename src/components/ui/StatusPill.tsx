@@ -48,6 +48,12 @@ const styles: Record<string, { bg: string; color: string }> = {
   visit: { bg: "rgba(43,145,216,0.15)", color: "#186faf" },
   plan: { bg: "rgba(16,42,67,0.1)", color: "#102a43" },
   info: { bg: "rgba(98,125,152,0.15)", color: "#486581" },
+  core: { bg: "rgba(16,42,67,0.1)", color: "#102a43" },
+  elective: { bg: "rgba(20,184,166,0.15)", color: "#0f766e" },
+  pathway: { bg: "rgba(43,145,216,0.15)", color: "#186faf" },
+  completed: { bg: "rgba(16,42,67,0.1)", color: "#102a43" },
+  dropped: { bg: "rgba(224,122,95,0.18)", color: "#c0564a" },
+  requested: { bg: "rgba(232,163,23,0.18)", color: "#b7791f" },
 };
 
 export function StatusPill({ status }: { status: string }) {

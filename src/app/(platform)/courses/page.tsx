@@ -7,14 +7,14 @@ export default function CoursesPage() {
     <div>
       <PageHeader
         eyebrow="Classes & learning"
-        title="Class catalog by year level"
-        description="Early learning through senior secondary — each class tagged with year levels, school band, and delivery mode."
+        title="Course catalog with credits"
+        description="Core, pathway, and elective courses for Kindy–Year 13 — each with credit value, seats, and delivery mode."
         actions={
           <button
             type="button"
             className="rounded-full bg-ink px-4 py-2.5 text-sm font-semibold text-white"
           >
-            Create class
+            Create course
           </button>
         }
       />
@@ -31,7 +31,10 @@ export default function CoursesPage() {
                   {course.title}
                 </h2>
               </div>
-              <StatusPill status={course.mode} />
+              <div className="flex flex-col items-end gap-2">
+                <StatusPill status={course.kind} />
+                <StatusPill status={course.mode} />
+              </div>
             </div>
             <p className="mt-3 text-sm text-slate">
               {course.teacher} · {course.schedule}
@@ -40,7 +43,8 @@ export default function CoursesPage() {
               {course.band} · {course.yearLevels.join(", ")}
             </p>
             <p className="mt-1 text-sm text-slate">
-              {course.students} students · {course.term}
+              {course.credits} credits · {course.students}/{course.seats} seats ·{" "}
+              {course.term}
             </p>
             <div className="mt-5">
               <div className="mb-2 flex items-center justify-between text-xs text-slate">

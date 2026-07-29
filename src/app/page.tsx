@@ -9,8 +9,8 @@ import {
 
 const modules = [
   {
-    title: "Student information & health",
-    copy: "Kindy–Year 13 records, guardians, health notes, and enrollment in one SIS.",
+    title: "SIS for students",
+    copy: "Manage electives, courses, and credits with ease — plus guardians, health, and year-level records.",
     icon: GraduationCap,
   },
   {
@@ -111,11 +111,11 @@ export default function HomePage() {
           {[
             {
               title: "Know every learner",
-              copy: "Student information, guardians, homerooms, and year-level capacity from Kindy intake to Year 13 leavers.",
+              copy: "SIS records for Kindy–Year 13 — guardians, homerooms, electives, course loads, and credit progress.",
             },
             {
               title: "Run the school day",
-              copy: "Track attendance, manage grades, message families, and keep classes in sync across every band.",
+              copy: "We handle administrative tasks around enrollment, schedules, attendance, and grades so staff can teach.",
             },
             {
               title: "Connect your systems",

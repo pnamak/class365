@@ -55,7 +55,7 @@ export const navSections: NavSection[] = [
     items: [
       {
         href: "/students",
-        label: "Student information",
+        label: "SIS · Students",
         icon: School,
         roles: ["admin", "teacher"],
       },

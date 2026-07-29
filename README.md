@@ -4,7 +4,7 @@ Class 365 is a cloud education platform structured around the full **Kindy → Y
 
 ## Key student management features
 
-- **Student information management** — year level, band, homeroom, guardians, pastoral care
+- **SIS for students** — electives, courses, credits, year level, guardians, pastoral care
 - **Attendance tracking** — auto, biometric, and manual rolls by year level
 - **Grade management** — OTJs / learning stories, numeric marks, NCEA standards
 - **Class schedules** — weekly timetable by band, period, room, and teacher
@@ -50,7 +50,7 @@ Password for all roles: `demo123`
 | `/` | Marketing landing |
 | `/signin` | Role-based sign in |
 | `/dashboard` | Centralized overview |
-| `/students` | Student information (K–13) |
+| `/students` | SIS — students, electives, courses & credits |
 | `/enrollment` | Pre-admission |
 | `/attendance` | Attendance tracking |
 | `/gradebook` | Grade management |

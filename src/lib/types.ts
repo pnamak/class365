@@ -58,7 +58,13 @@ export interface Student {
   guardianEmail: string;
   enrolledAt: string;
   avatar: string;
+  creditsEarned: number;
+  creditsRequired: number;
+  electiveSlots: number;
+  electiveFilled: number;
 }
+
+export type CourseKind = "core" | "elective" | "pathway";
 
 export interface Course {
   id: string;
@@ -72,6 +78,44 @@ export interface Course {
   mode: "in-person" | "hybrid" | "online";
   progress: number;
   term: string;
+  credits: number;
+  kind: CourseKind;
+  seats: number;
+}
+
+export type EnrollmentStatus =
+  | "enrolled"
+  | "waitlist"
+  | "completed"
+  | "dropped"
+  | "requested";
+
+export interface StudentCourseEnrollment {
+  id: string;
+  studentId: string;
+  studentName: string;
+  yearLevel: YearLevel;
+  courseCode: string;
+  courseTitle: string;
+  kind: CourseKind;
+  credits: number;
+  status: EnrollmentStatus;
+  term: string;
+  teacher: string;
+}
+
+export interface ElectiveOffering {
+  id: string;
+  code: string;
+  title: string;
+  yearLevels: YearLevel[];
+  credits: number;
+  seats: number;
+  enrolled: number;
+  waitlist: number;
+  teacher: string;
+  term: string;
+  category: string;
 }
 
 export interface AttendanceRecord {
