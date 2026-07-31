@@ -12,8 +12,8 @@ export function TopBar() {
 
   if (!user) return null;
 
-  function handleSignOut() {
-    signOut();
+  async function handleSignOut() {
+    await signOut();
     router.push("/signin");
   }
 

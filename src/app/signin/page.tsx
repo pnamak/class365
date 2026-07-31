@@ -37,11 +37,11 @@ function SignInForm() {
     if (ready && user) router.replace(next);
   }, [ready, user, router, next]);
 
-  function onSubmit(event: FormEvent) {
+  async function onSubmit(event: FormEvent) {
     event.preventDefault();
     setPending(true);
     setError("");
-    const result = signIn(email, password);
+    const result = await signIn(email, password);
     if (!result.ok) {
       setError(result.error);
       setPending(false);
@@ -50,13 +50,15 @@ function SignInForm() {
     router.push(next);
   }
 
-  function quickSignIn(role: UserRole) {
+  async function quickSignIn(role: UserRole) {
     const demo = DEMO_USERS.find((u) => u.role === role);
     if (demo) {
       setEmail(demo.email);
       setPassword(demo.password);
     }
-    signInAs(role);
+    setPending(true);
+    setError("");
+    await signInAs(role);
     router.push("/dashboard");
   }
 

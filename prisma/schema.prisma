@@ -1,0 +1,184 @@
+// Class 365 schema — Sea Notes SaaS starter kit foundation
+// Local default: SQLite. Production (DigitalOcean App Platform): PostgreSQL.
+// Set DATABASE_URL accordingly (see .env.example and docker-compose.yaml).
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+// --- Sea Notes SaaS foundation (auth + subscriptions) ---
+
+model User {
+  id                String    @id @default(cuid())
+  name              String?
+  email             String    @unique
+  emailVerified     Boolean   @default(false)
+  image             String?
+  passwordHash      String?
+  role              String    @default("TEACHER") // ADMIN | TEACHER | STUDENT | PARENT
+  title             String?
+  avatar            String?
+  verificationToken String?
+  createdAt         DateTime  @default(now())
+  updatedAt         DateTime  @updatedAt
+
+  accounts          Account[]
+  sessions          Session[]
+  subscription      Subscription?
+  notes             Note[]
+}
+
+model Account {
+  id                String  @id @default(cuid())
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String?
+  access_token      String?
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String?
+  session_state     String?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model VerificationToken {
+  identifier String
+  token      String
+  expires    DateTime
+
+  @@id([identifier, token])
+}
+
+model Subscription {
+  id         String   @id @default(cuid())
+  userId     String   @unique
+  status     String? // PENDING | ACTIVE | CANCELED
+  plan       String? // FREE | PRO | SCHOOL
+  customerId String?
+  createdAt  DateTime @default(now())
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+/// Sea Notes example domain retained for starter-kit parity / AI notes later.
+model Note {
+  id        String   @id @default(cuid())
+  userId    String
+  title     String
+  content   String
+  createdAt DateTime @default(now())
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+// --- Class 365 education domain ---
+
+model Student {
+  id             String   @id @default(cuid())
+  externalId     String   @unique
+  name           String
+  email          String
+  yearLevel      String
+  band           String
+  homeroom       String
+  program        String
+  status         String
+  gpa            Float    @default(0)
+  attendanceRate Int      @default(0)
+  advisor        String
+  guardian       String
+  guardianEmail  String
+  enrolledAt     String
+  avatar         String
+  creditsEarned  Int      @default(0)
+  creditsRequired Int     @default(0)
+  electiveSlots  Int      @default(0)
+  electiveFilled Int      @default(0)
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  enrollments SchoolEnrollment[]
+  invoices    Invoice[]
+}
+
+model SchoolClass {
+  id         String   @id @default(cuid())
+  code       String   @unique
+  title      String
+  teacher    String
+  yearLevels String // JSON array string
+  band       String
+  students   Int      @default(0)
+  schedule   String
+  mode       String
+  progress   Int      @default(0)
+  term       String
+  credits    Int      @default(0)
+  kind       String // core | elective | pathway
+  seats      Int      @default(0)
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  enrollments SchoolEnrollment[]
+}
+
+model SchoolEnrollment {
+  id         String   @id @default(cuid())
+  studentId  String
+  classId    String
+  status     String // enrolled | waitlist | completed | dropped | requested
+  term       String
+  credits    Int      @default(0)
+  createdAt  DateTime @default(now())
+
+  student Student     @relation(fields: [studentId], references: [id], onDelete: Cascade)
+  class   SchoolClass @relation(fields: [classId], references: [id], onDelete: Cascade)
+}
+
+model Invoice {
+  id          String   @id @default(cuid())
+  externalId  String   @unique
+  studentId   String?
+  studentName String
+  yearLevel   String
+  description String
+  amount      Int // Vanuatu Vatu (whole units)
+  dueDate     String
+  status      String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  student Student? @relation(fields: [studentId], references: [id], onDelete: SetNull)
+}
+
+model ElectiveOffering {
+  id         String   @id @default(cuid())
+  code       String   @unique
+  title      String
+  yearLevels String
+  credits    Int
+  seats      Int
+  enrolled   Int      @default(0)
+  waitlist   Int      @default(0)
+  teacher    String
+  term       String
+  category   String
+  createdAt  DateTime @default(now())
+}

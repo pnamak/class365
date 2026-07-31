@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import {
   Award,
   BookOpen,
@@ -12,15 +12,16 @@ import {
 import { PageHeader } from "@/components/ui/PageHeader";
 import { StatTile } from "@/components/ui/StatTile";
 import { StatusPill } from "@/components/ui/StatusPill";
+import { fetchApiJson } from "@/lib/api-client";
 import {
-  electiveOfferings,
+  electiveOfferings as mockElectives,
   SCHOOL_BANDS,
   studentEnrollments,
-  students,
+  students as mockStudents,
   yearLevelCensus,
   YEAR_LEVELS,
 } from "@/lib/data";
-import type { SchoolBand, YearLevel } from "@/lib/types";
+import type { ElectiveOffering, SchoolBand, Student, YearLevel } from "@/lib/types";
 
 type SisTab = "directory" | "classes" | "electives";
 
@@ -28,6 +29,34 @@ export default function StudentsPage() {
   const [tab, setTab] = useState<SisTab>("directory");
   const [band, setBand] = useState<SchoolBand | "All">("All");
   const [yearLevel, setYearLevel] = useState<YearLevel | "All">("All");
+  const [students, setStudents] = useState<Student[]>(mockStudents);
+  const [electiveOfferings, setElectiveOfferings] =
+    useState<ElectiveOffering[]>(mockElectives);
+  const [dataSource, setDataSource] = useState<"prisma" | "demo">("demo");
+
+  useEffect(() => {
+    let cancelled = false;
+    async function load() {
+      const [studentRes, electiveRes] = await Promise.all([
+        fetchApiJson<{ data: Student[]; source?: string }>("/api/students"),
+        fetchApiJson<{ data: ElectiveOffering[]; source?: string }>(
+          "/api/electives",
+        ),
+      ]);
+      if (cancelled) return;
+      if (studentRes?.data?.length) {
+        setStudents(studentRes.data);
+        setDataSource("prisma");
+      }
+      if (electiveRes?.data?.length) {
+        setElectiveOfferings(electiveRes.data);
+      }
+    }
+    void load();
+    return () => {
+      cancelled = true;
+    };
+  }, []);
 
   const filteredStudents = useMemo(
     () =>
@@ -36,7 +65,7 @@ export default function StudentsPage() {
         if (yearLevel !== "All" && student.yearLevel !== yearLevel) return false;
         return true;
       }),
-    [band, yearLevel],
+    [students, band, yearLevel],
   );
 
   const filteredEnrollments = useMemo(
@@ -76,7 +105,11 @@ export default function StudentsPage() {
       <PageHeader
         eyebrow="Student Information System (SIS)"
         title="Students, electives, classes & credits"
-        description="Class 365 handles the administrative load — year-level records, class enrollments, elective requests, and credit progress — so institutions can focus on teaching."
+        description={
+          dataSource === "prisma"
+            ? "Live SIS data from the Sea Notes Prisma backend — year-level records, class enrollments, elective requests, and credit progress."
+            : "Class 365 handles the administrative load — year-level records, class enrollments, elective requests, and credit progress — so institutions can focus on teaching."
+        }
         actions={
           <>
             <button

@@ -2,11 +2,40 @@ import { PageHeader } from "@/components/ui/PageHeader";
 import { StatTile } from "@/components/ui/StatTile";
 import { StatusPill } from "@/components/ui/StatusPill";
 import { formatVatu, CURRENCY_LABEL } from "@/lib/currency";
-import { invoices } from "@/lib/data";
+import { invoices as mockInvoices } from "@/lib/data";
 import { SCHOOL } from "@/lib/locale";
+import { prisma } from "@/lib/prisma";
+import type { Invoice } from "@/lib/types";
 import { AlertTriangle, CircleDollarSign, Wallet } from "lucide-react";
 
-export default function BillingPage() {
+export const dynamic = "force-dynamic";
+
+async function loadInvoices(): Promise<{
+  invoices: Invoice[];
+  source: "prisma" | "demo";
+}> {
+  try {
+    const rows = await prisma.invoice.findMany({ orderBy: { dueDate: "asc" } });
+    if (rows.length === 0) return { invoices: mockInvoices, source: "demo" };
+    return {
+      invoices: rows.map((invoice) => ({
+        id: invoice.externalId,
+        studentName: invoice.studentName,
+        yearLevel: invoice.yearLevel as Invoice["yearLevel"],
+        description: invoice.description,
+        amount: invoice.amount,
+        dueDate: invoice.dueDate,
+        status: invoice.status as Invoice["status"],
+      })),
+      source: "prisma",
+    };
+  } catch {
+    return { invoices: mockInvoices, source: "demo" };
+  }
+}
+
+export default async function BillingPage() {
+  const { invoices, source } = await loadInvoices();
   const outstanding = invoices
     .filter((i) => i.status === "pending" || i.status === "overdue")
     .reduce((sum, i) => sum + i.amount, 0);
@@ -20,7 +49,11 @@ export default function BillingPage() {
       <PageHeader
         eyebrow="Billing · Vanuatu Vatu (VT)"
         title="School fees & levies"
-        description={`Invoice families in ${CURRENCY_LABEL} for ${SCHOOL.shortName} — Kindy to Year 13 term fees, deposits, and levies.`}
+        description={
+          source === "prisma"
+            ? `Live fee ledger from Prisma for ${SCHOOL.shortName} — Kindy to Year 13 term fees, deposits, and levies in ${CURRENCY_LABEL}.`
+            : `Invoice families in ${CURRENCY_LABEL} for ${SCHOOL.shortName} — Kindy to Year 13 term fees, deposits, and levies.`
+        }
         actions={
           <button
             type="button"
