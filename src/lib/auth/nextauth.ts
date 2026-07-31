@@ -1,6 +1,5 @@
 import NextAuth from "next-auth";
 import Credentials from "next-auth/providers/credentials";
-import { PrismaAdapter } from "@auth/prisma-adapter";
 import { prisma } from "@/lib/prisma";
 import { verifyPassword } from "@/lib/auth/password";
 import { toAppRole } from "@/lib/auth/roles";
@@ -10,9 +9,14 @@ import { authConfig } from "@/lib/auth/auth.config";
 
 applyAuthUrlFromEnv();
 
+/**
+ * Credentials + JWT only (no PrismaAdapter).
+ * The Auth.js Prisma adapter is for OAuth account linking; pairing it with
+ * credentials sessions can leave the client session empty while middleware
+ * still sees a cookie — which traps the UI on "Checking your Class 365 session…".
+ */
 export const { handlers, signIn, signOut, auth } = NextAuth({
   ...authConfig,
-  adapter: PrismaAdapter(prisma),
   providers: [
     Credentials({
       credentials: {

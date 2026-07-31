@@ -47,7 +47,8 @@ function SignInForm() {
       setPending(false);
       return;
     }
-    router.push(next);
+    router.replace(next);
+    router.refresh();
   }
 
   async function quickSignIn(role: UserRole) {
@@ -58,8 +59,14 @@ function SignInForm() {
     }
     setPending(true);
     setError("");
-    await signInAs(role);
-    router.push("/dashboard");
+    const result = await signInAs(role);
+    if (!result.ok) {
+      setError(result.error);
+      setPending(false);
+      return;
+    }
+    router.replace("/dashboard");
+    router.refresh();
   }
 
   if (!ready || user) {

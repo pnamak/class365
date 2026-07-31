@@ -52,16 +52,16 @@ export const authConfig = {
         token.name = user.name;
         token.email = user.email;
       }
+      // Keep a safe default so RequireAuth never blocks forever on a missing role.
+      if (!token.role) token.role = "teacher";
       return token;
     },
     async session({ session, token }) {
       if (session.user) {
-        session.user.id = token.id as string;
-        session.user.role = token.role as
-          | "admin"
-          | "teacher"
-          | "student"
-          | "parent";
+        session.user.id = (token.id as string) || "";
+        session.user.role =
+          (token.role as "admin" | "teacher" | "student" | "parent") ||
+          "teacher";
         session.user.title = (token.title as string) || "";
         session.user.avatar = (token.avatar as string) || "";
         if (token.name) session.user.name = token.name as string;

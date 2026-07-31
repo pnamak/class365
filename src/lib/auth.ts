@@ -135,6 +135,12 @@ export const ROLE_ROUTES: Record<UserRole, string[]> = {
 
 export const AUTH_STORAGE_KEY = "class365.auth.user";
 
+const APP_ROLES: UserRole[] = ["admin", "teacher", "student", "parent"];
+
+export function isUserRole(value: unknown): value is UserRole {
+  return typeof value === "string" && APP_ROLES.includes(value as UserRole);
+}
+
 export function authenticate(
   email: string,
   password: string,
@@ -145,7 +151,11 @@ export function authenticate(
   return user;
 }
 
-export function canAccessRoute(role: UserRole, pathname: string): boolean {
+export function canAccessRoute(
+  role: UserRole | null | undefined,
+  pathname: string,
+): boolean {
+  if (!isUserRole(role)) return false;
   const allowed = ROLE_ROUTES[role];
   return allowed.some(
     (route) => pathname === route || pathname.startsWith(`${route}/`),
