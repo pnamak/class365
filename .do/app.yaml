@@ -27,9 +27,17 @@ services:
       - key: AUTH_SECRET
         type: SECRET
         scope: RUN_AND_BUILD_TIME
+      # Auth.js / app public URL. APP_URL is a DO bindable variable
+      # (https://docs.digitalocean.com/products/app-platform/how-to/use-environment-variables/).
+      - key: AUTH_TRUST_HOST
+        value: "true"
+        scope: RUN_AND_BUILD_TIME
+      - key: AUTH_URL
+        value: ${APP_URL}
+        scope: RUN_AND_BUILD_TIME
       - key: BASE_URL
         value: ${APP_URL}
-        scope: RUN_TIME
+        scope: RUN_AND_BUILD_TIME
       - key: STORAGE_PROVIDER
         value: Spaces
       - key: SPACES_KEY_ID

@@ -4,10 +4,11 @@ import { PrismaAdapter } from "@auth/prisma-adapter";
 import { prisma } from "@/lib/prisma";
 import { verifyPassword } from "@/lib/auth/password";
 import { toAppRole } from "@/lib/auth/roles";
+import { applyAuthUrlFromEnv } from "@/lib/auth/public-url";
 import { serverConfig } from "@/lib/settings";
 import { authConfig } from "@/lib/auth/auth.config";
 
-process.env.AUTH_URL = process.env.BASE_URL || process.env.AUTH_URL;
+applyAuthUrlFromEnv();
 
 export const { handlers, signIn, signOut, auth } = NextAuth({
   ...authConfig,

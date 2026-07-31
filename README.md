@@ -74,9 +74,12 @@ Spec: `.do/app.yaml` (Sea Notes–aligned).
 1. Create the app from this repo (or sync the app spec).
 2. Attach the `class365-db` Postgres component — `DATABASE_URL` is bound as `${class365-db.DATABASE_URL}`.
 3. Set **`AUTH_SECRET`** in the App Platform UI (required secret).
-4. Deploy. Boot runs `prisma migrate deploy`, seeds demo data only when the DB is empty, then `npm start`.
+4. Keep `AUTH_URL` / `BASE_URL` bound to `${APP_URL}` and `AUTH_TRUST_HOST=true`.
+5. Deploy. Boot runs `prisma migrate deploy`, seeds demo data only when the DB is empty, then `npm start`.
 
-If an older deploy failed with `the URL must start with the protocol file:`, that was the SQLite schema mismatch — this branch uses PostgreSQL only.
+**Common deploy errors**
+- `URL must start with the protocol file:` — Prisma was still on SQLite; use this Postgres branch.
+- `TypeError: Invalid URL` — Auth.js received a bad/empty `AUTH_URL` (often the literal string `"undefined"`). Fixed by safe URL resolution + `${APP_URL}` binding.
 
 ## App routes
 
