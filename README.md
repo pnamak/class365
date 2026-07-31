@@ -25,7 +25,7 @@ Localized demo campus: **Harbour Academy Port Vila**, Vanuatu.
 
 - Next.js (App Router) + TypeScript + Tailwind CSS v4
 - **NextAuth (Auth.js)** — credentials sessions (Sea Notes pattern)
-- **Prisma** — SQLite locally; PostgreSQL for DigitalOcean / production
+- **Prisma + PostgreSQL** — same as Sea Notes / DigitalOcean App Platform
 - Lucide icons
 - Stripe / Resend / DigitalOcean Spaces env stubs (Sea Notes integrations)
 
@@ -33,8 +33,9 @@ Localized demo campus: **Harbour Academy Port Vila**, Vanuatu.
 
 ```bash
 cp .env.example .env
-npm install --legacy-peer-deps
-npm run db:push
+docker compose up -d
+npm install
+npm run db:migrate
 npm run db:seed
 npm run dev
 ```
@@ -52,17 +53,6 @@ Password for all roles: `demo123`
 | Student | `student@class365.edu` |
 | Parent | `parent@class365.edu` |
 
-### Optional Postgres (Sea Notes default)
-
-```bash
-docker compose up -d
-# then in .env:
-# DATABASE_PROVIDER=Postgres
-# DATABASE_URL=postgresql://postgres:postgres@localhost:5432/class365_db
-# and set provider = "postgresql" in prisma/schema.prisma
-npm run db:push
-npm run db:seed
-```
 
 ## Backend API (authenticated)
 
@@ -79,7 +69,14 @@ npm run db:seed
 
 ## Deploy (DigitalOcean App Platform)
 
-See `.do/app.yaml`. Set `DATABASE_URL`, `AUTH_SECRET`, and switch Prisma `provider` to `postgresql` for managed Postgres.
+Spec: `.do/app.yaml` (Sea Notes–aligned).
+
+1. Create the app from this repo (or sync the app spec).
+2. Attach the `class365-db` Postgres component — `DATABASE_URL` is bound as `${class365-db.DATABASE_URL}`.
+3. Set **`AUTH_SECRET`** in the App Platform UI (required secret).
+4. Deploy. Boot runs `prisma migrate deploy`, seeds demo data only when the DB is empty, then `npm start`.
+
+If an older deploy failed with `the URL must start with the protocol file:`, that was the SQLite schema mismatch — this branch uses PostgreSQL only.
 
 ## App routes
 

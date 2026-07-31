@@ -1,13 +1,13 @@
 // Class 365 schema — Sea Notes SaaS starter kit foundation
-// Local default: SQLite. Production (DigitalOcean App Platform): PostgreSQL.
-// Set DATABASE_URL accordingly (see .env.example and docker-compose.yaml).
+// PostgreSQL (DigitalOcean App Platform / local docker-compose).
+// See .env.example and docker-compose.yaml.
 
 generator client {
   provider = "prisma-client-js"
 }
 
 datasource db {
-  provider = "sqlite"
+  provider = "postgresql"
   url      = env("DATABASE_URL")
 }
 

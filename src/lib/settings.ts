@@ -34,7 +34,7 @@ export interface ServerConfig {
 
 /** Sea Notes–compatible server config for DigitalOcean integrations. */
 export const serverConfig: ServerConfig = {
-  databaseProvider: process.env.DATABASE_PROVIDER || "SQLite",
+  databaseProvider: process.env.DATABASE_PROVIDER || "Postgres",
   storageProvider: process.env.STORAGE_PROVIDER || "Spaces",
   emailProvider: process.env.EMAIL_PROVIDER || "Resend",
   billingProvider: process.env.BILLING_PROVIDER || "Stripe",
