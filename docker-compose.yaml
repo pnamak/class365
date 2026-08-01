@@ -1,0 +1,26 @@
+# Local Postgres for Class 365 — mirrors Sea Notes SaaS starter kit
+# https://github.com/digitalocean/sea-notes-saas-starter-kit
+services:
+  postgres:
+    image: postgres:15
+    container_name: class365-postgres
+    restart: unless-stopped
+    env_file:
+      - .env
+    ports:
+      - "${POSTGRES_PORT:-5432}:5432"
+    environment:
+      POSTGRES_USER: "${POSTGRES_USER:-postgres}"
+      POSTGRES_PASSWORD: "${POSTGRES_PASSWORD:-postgres}"
+      POSTGRES_DB: "${POSTGRES_DB:-class365_db}"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - class365-network
+
+volumes:
+  postgres_data:
+
+networks:
+  class365-network:
+    driver: bridge

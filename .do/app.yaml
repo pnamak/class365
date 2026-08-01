@@ -1,0 +1,78 @@
+# DigitalOcean App Platform spec — aligned with Sea Notes SaaS starter kit
+# https://github.com/digitalocean/sea-notes-saas-starter-kit
+name: class365
+
+services:
+  - name: application
+    environment_slug: node-js
+    source_dir: /
+    github:
+      repo: pnamak/class365
+      branch: main
+      deploy_on_push: true
+    build_command: "npm ci && npx prisma generate && npm run build"
+    run_command: "npx prisma migrate deploy && node scripts/ensure-seed.mjs && npm run start"
+    http_port: 3000
+    instance_count: 1
+    instance_size_slug: apps-s-1vcpu-0.5gb
+    routes:
+      - path: /
+    envs:
+      - key: DATABASE_URL
+        value: ${class365-db.DATABASE_URL}
+        type: SECRET
+        scope: RUN_AND_BUILD_TIME
+      - key: DATABASE_PROVIDER
+        value: Postgres
+      # Required by Auth.js. Replace this default in the DO UI for production.
+      # An empty/missing AUTH_SECRET causes: "There is a problem with the server configuration."
+      - key: AUTH_SECRET
+        value: "class365-change-me-generate-with-openssl-rand-base64-32"
+        type: SECRET
+        scope: RUN_AND_BUILD_TIME
+      # Auth.js / app public URL. APP_URL is a DO bindable variable
+      # (https://docs.digitalocean.com/products/app-platform/how-to/use-environment-variables/).
+      - key: AUTH_TRUST_HOST
+        value: "true"
+        scope: RUN_AND_BUILD_TIME
+      - key: AUTH_URL
+        value: ${APP_URL}
+        scope: RUN_AND_BUILD_TIME
+      - key: BASE_URL
+        value: ${APP_URL}
+        scope: RUN_AND_BUILD_TIME
+      - key: NEXTAUTH_URL
+        value: ${APP_URL}
+        scope: RUN_AND_BUILD_TIME
+      - key: STORAGE_PROVIDER
+        value: Spaces
+      - key: SPACES_KEY_ID
+        type: SECRET
+      - key: SPACES_SECRET_KEY
+        type: SECRET
+      - key: SPACES_BUCKET_NAME
+      - key: SPACES_REGION
+        value: nyc3
+      - key: EMAIL_PROVIDER
+        value: Resend
+      - key: RESEND_API_KEY
+        type: SECRET
+      - key: RESEND_EMAIL_SENDER
+      - key: ENABLE_EMAIL_INTEGRATION
+        value: "false"
+      - key: BILLING_PROVIDER
+        value: Stripe
+      - key: STRIPE_SECRET_KEY
+        type: SECRET
+      - key: STRIPE_WEBHOOK_SECRET
+        type: SECRET
+      - key: DO_INFERENCE_API_KEY
+        type: SECRET
+      - key: NEXT_PUBLIC_DIGITALOCEAN_GRADIENTAI_ENABLED
+        value: "false"
+
+databases:
+  - name: class365-db
+    engine: PG
+    version: "15"
+    production: false
