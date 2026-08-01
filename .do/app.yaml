@@ -24,7 +24,10 @@ services:
         scope: RUN_AND_BUILD_TIME
       - key: DATABASE_PROVIDER
         value: Postgres
+      # Required by Auth.js. Replace this default in the DO UI for production.
+      # An empty/missing AUTH_SECRET causes: "There is a problem with the server configuration."
       - key: AUTH_SECRET
+        value: "class365-change-me-generate-with-openssl-rand-base64-32"
         type: SECRET
         scope: RUN_AND_BUILD_TIME
       # Auth.js / app public URL. APP_URL is a DO bindable variable
@@ -36,6 +39,9 @@ services:
         value: ${APP_URL}
         scope: RUN_AND_BUILD_TIME
       - key: BASE_URL
+        value: ${APP_URL}
+        scope: RUN_AND_BUILD_TIME
+      - key: NEXTAUTH_URL
         value: ${APP_URL}
         scope: RUN_AND_BUILD_TIME
       - key: STORAGE_PROVIDER

@@ -80,6 +80,7 @@ Spec: `.do/app.yaml` (Sea Notes–aligned).
 **Common deploy errors**
 - `URL must start with the protocol file:` — Prisma was still on SQLite; use this Postgres branch.
 - `TypeError: Invalid URL` — Auth.js received a bad/empty `AUTH_URL` (often the literal string `"undefined"`). Fixed by safe URL resolution + `${APP_URL}` binding.
+- `Server error — There is a problem with the server configuration.` — Auth.js `MissingSecret` or a thrown authorize/DB error. Set `AUTH_SECRET` in App Platform (App-Level Environment Variables), confirm `DATABASE_URL` = `${class365-db.DATABASE_URL}`, then check `/api/system-status`.
 
 ## App routes
 

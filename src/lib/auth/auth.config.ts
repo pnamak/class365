@@ -1,18 +1,23 @@
 import type { NextAuthConfig } from "next-auth";
 import { applyAuthUrlFromEnv } from "@/lib/auth/public-url";
+import { resolveAuthSecret } from "@/lib/auth/secret";
 
 // Prevent Auth.js `TypeError: Invalid URL` when BASE_URL/AUTH_URL are unset
 // (Node would otherwise coerce assignments to the string "undefined").
 applyAuthUrlFromEnv();
 
+const { secret } = resolveAuthSecret();
+
 /** Edge-safe Auth.js config (no Prisma) — Sea Notes middleware pattern. */
 export const authConfig = {
   // Required behind DigitalOcean App Platform's reverse proxy.
   trustHost: true,
-  secret: process.env.AUTH_SECRET || process.env.NEXTAUTH_SECRET,
+  secret,
   providers: [],
   pages: {
     signIn: "/signin",
+    // Keep users on our branded page instead of Auth.js HTML error screen.
+    error: "/signin",
   },
   callbacks: {
     authorized({ auth, request }) {
@@ -72,5 +77,13 @@ export const authConfig = {
   },
   session: {
     strategy: "jwt",
+  },
+  logger: {
+    error(error) {
+      console.error("[auth:error]", error);
+    },
+    warn(code) {
+      console.warn("[auth:warn]", code);
+    },
   },
 } satisfies NextAuthConfig;

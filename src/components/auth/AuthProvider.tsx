@@ -46,7 +46,13 @@ function AuthContextBridge({ children }: { children: React.ReactNode }) {
         redirect: false,
       });
       if (result?.error) {
-        return { ok: false as const, error: "Invalid email or password." };
+        const message =
+          result.error === "Configuration"
+            ? "Server auth is misconfigured. Set AUTH_SECRET (and a working DATABASE_URL) in DigitalOcean App Platform, then redeploy."
+            : result.error === "CredentialsSignin"
+              ? "Invalid email or password."
+              : `Sign-in failed (${result.error}). Check server logs.`;
+        return { ok: false as const, error: message };
       }
       // Critical: sync SessionProvider before navigating to RequireAuth routes.
       await update();

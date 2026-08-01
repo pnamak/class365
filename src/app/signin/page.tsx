@@ -30,8 +30,18 @@ function SignInForm() {
 
   const [email, setEmail] = useState("admin@class365.edu");
   const [password, setPassword] = useState("demo123");
-  const [error, setError] = useState("");
+  const [formError, setFormError] = useState("");
   const [pending, setPending] = useState(false);
+  const authError = searchParams.get("error");
+  const queryError =
+    authError === "Configuration"
+      ? "Server auth is misconfigured. In DigitalOcean App Platform, set AUTH_SECRET to a long random value, confirm DATABASE_URL is bound to your Postgres DB, then redeploy."
+      : authError === "CredentialsSignin" || authError === "Callback"
+        ? "Invalid email or password."
+        : authError
+          ? `Sign-in failed (${authError}). Check App Platform logs for details.`
+          : "";
+  const error = formError || queryError;
 
   useEffect(() => {
     if (ready && user) router.replace(next);
@@ -40,10 +50,10 @@ function SignInForm() {
   async function onSubmit(event: FormEvent) {
     event.preventDefault();
     setPending(true);
-    setError("");
+    setFormError("");
     const result = await signIn(email, password);
     if (!result.ok) {
-      setError(result.error);
+      setFormError(result.error);
       setPending(false);
       return;
     }
@@ -58,10 +68,10 @@ function SignInForm() {
       setPassword(demo.password);
     }
     setPending(true);
-    setError("");
+    setFormError("");
     const result = await signInAs(role);
     if (!result.ok) {
-      setError(result.error);
+      setFormError(result.error);
       setPending(false);
       return;
     }
@@ -189,7 +199,7 @@ function SignInForm() {
                 onClick={() => {
                   setEmail(demo.email);
                   setPassword(demo.password);
-                  setError("");
+                  setFormError("");
                 }}
               >
                 {demo.email}
