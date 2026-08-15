@@ -47,6 +47,24 @@ function class365_must_query(mysqli $conn, string $sql, string $label): void
 }
 
 /**
+ * tu_login_authentication compares login_authentication.username (utf8_general_ci)
+ * with login_records / hacking_log (utf8_unicode_ci). Any UPDATE of the admin
+ * row then fatals and the user never reaches the portal.
+ */
+function class365_normalize_login_collations(mysqli $conn): void
+{
+    foreach (['login_records', 'hacking_log'] as $table) {
+        $exists = $conn->query("SHOW TABLES LIKE '{$table}'");
+        if ($exists && $exists->num_rows > 0) {
+            $conn->query("ALTER TABLE `{$table}` CONVERT TO CHARACTER SET utf8 COLLATE utf8_general_ci");
+        }
+        if ($exists) {
+            $exists->free();
+        }
+    }
+}
+
+/**
  * Always repair the rows the login JOIN needs: profile 0, school year,
  * staff 1, login_authentication, and staff_school_relationship for the
  * current year. A half-finished first boot previously left admin/demo123
@@ -65,7 +83,8 @@ function class365_ensure_admin_seed(
     int $syear
 ): void {
     $conn->query("SET SESSION sql_mode = 'NO_AUTO_VALUE_ON_ZERO'");
-    $conn->query("SET NAMES utf8 COLLATE utf8_unicode_ci");
+    $conn->query("SET NAMES utf8 COLLATE utf8_general_ci");
+    class365_normalize_login_collations($conn);
 
     $sn = $conn->real_escape_string($schoolName);
     $city = $conn->real_escape_string($schoolCity);

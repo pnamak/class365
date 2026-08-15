@@ -86,4 +86,11 @@ if (!password_verify('admin123', $hash)) {
     exit(1);
 }
 
+try {
+    $conn->query("UPDATE login_authentication SET LAST_LOGIN=CURRENT_TIMESTAMP, FAILED_LOGIN=0 WHERE USER_ID=1 AND PROFILE_ID=0");
+} catch (Throwable $e) {
+    fwrite(STDERR, "LAST_LOGIN update still fails: {$e->getMessage()}\n");
+    exit(1);
+}
+
 echo "OK bootstrap_seed_test\n";
