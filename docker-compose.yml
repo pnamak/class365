@@ -1,0 +1,76 @@
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    restart: unless-stopped
+    # Coolify routes via reverse proxy — do not bind host ports here.
+    # For local access: docker compose -f docker-compose.yml -f docker-compose.local.yml up
+    expose:
+      - "80"
+    labels:
+      - traefik.http.services.app.loadbalancer.server.port=80
+      - traefik.docker.network=coolify
+    # Traefik (coolify-proxy) only shares the external `coolify` network.
+    # App + db both join it so proxy can reach app and app can reach db.
+    networks:
+      - coolify
+    environment:
+      APP_NAME: Class 365
+      SCHOOL_NAME: Harbour Academy Port Vila
+      SCHOOL_CITY: Port Vila
+      SCHOOL_STATE: Shefa
+      SCHOOL_COUNTRY: Vanuatu
+      SCHOOL_CURRENCY: VUV
+      DB_HOST: db
+      DB_PORT: "3306"
+      DB_DATABASE: class365
+      DB_USERNAME: class365
+      DB_PASSWORD: class365pass
+      ADMIN_USERNAME: admin
+      ADMIN_PASSWORD: demo123
+      ADMIN_FIRST_NAME: Class
+      ADMIN_LAST_NAME: Admin
+      ADMIN_EMAIL: admin@class365.edu
+      AUTO_INSTALL: "true"
+    depends_on:
+      db:
+        condition: service_healthy
+    volumes:
+      - class365-data:/var/www/html/assets/studentfiles
+      - class365-staff:/var/www/html/assets/stafffiles
+    healthcheck:
+      test: ["CMD-SHELL", "curl -fsS http://127.0.0.1/ || exit 1"]
+      interval: 30s
+      timeout: 5s
+      retries: 5
+      start_period: 180s
+
+  db:
+    image: mariadb:10.11
+    restart: unless-stopped
+    networks:
+      - coolify
+    environment:
+      MYSQL_ROOT_PASSWORD: class365root
+      MYSQL_DATABASE: class365
+      MYSQL_USER: class365
+      MYSQL_PASSWORD: class365pass
+      MARIADB_AUTO_UPGRADE: "1"
+    volumes:
+      - class365-mysql:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "healthcheck.sh", "--connect", "--innodb_initialized"]
+      interval: 5s
+      timeout: 5s
+      retries: 30
+      start_period: 30s
+
+volumes:
+  class365-data:
+  class365-staff:
+  class365-mysql:
+
+networks:
+  coolify:
+    external: true
