@@ -14,7 +14,7 @@ $schoolName = getenv('SCHOOL_NAME') ?: 'Harbour Academy Port Vila';
 $schoolCity = getenv('SCHOOL_CITY') ?: 'Port Vila';
 $schoolState = getenv('SCHOOL_STATE') ?: 'Shefa';
 $adminUser = getenv('ADMIN_USERNAME') ?: 'admin';
-$adminPass = getenv('ADMIN_PASSWORD') ?: 'demo123';
+$adminPass = getenv('ADMIN_PASSWORD') ?: 'admin123';
 $adminFirst = getenv('ADMIN_FIRST_NAME') ?: 'Class';
 $adminLast = getenv('ADMIN_LAST_NAME') ?: 'Admin';
 $adminEmail = getenv('ADMIN_EMAIL') ?: 'admin@class365.edu';
@@ -28,6 +28,7 @@ function connect(string $host, string $user, string $pass, string $db, int $port
     }
     $conn->query("SET SESSION sql_mode = 'NO_AUTO_VALUE_ON_ZERO'");
     $conn->set_charset('utf8');
+    $conn->query("SET NAMES utf8 COLLATE utf8_unicode_ci");
     return $conn;
 }
 
@@ -38,97 +39,134 @@ function runSqlFile(mysqli $conn, string $path): void
     class365_run_sql_file($conn, $path);
 }
 
-echo "[class365] Connecting to {$host}:{$port}/{$db}" . PHP_EOL;
-$conn = connect($host, $user, $pass, $db, $port);
-
-$installed = false;
-$check = $conn->query("SHOW TABLES LIKE 'login_authentication'");
-if ($check && $check->num_rows > 0) {
-    $rows = $conn->query("SELECT 1 FROM login_authentication LIMIT 1");
-    $installed = $rows && $rows->num_rows > 0;
-    if ($rows) {
-        $rows->free();
+function class365_must_query(mysqli $conn, string $sql, string $label): void
+{
+    if (!$conn->query($sql)) {
+        throw new RuntimeException($label . ': ' . $conn->error);
     }
 }
-if ($check) {
-    $check->free();
-}
 
-if ($installed) {
-    echo "[class365] Schema already present — skipping fresh install." . PHP_EOL;
-} else {
-    $base = __DIR__ . '/../install';
-    runSqlFile($conn, $base . '/OpensisSchemaMysqlInc.sql');
-    runSqlFile($conn, $base . '/OpensisProcsMysqlInc.sql');
-    if (is_readable($base . '/OpensisTriggerMysqlInc.sql')) {
-        try {
-            runSqlFile($conn, $base . '/OpensisTriggerMysqlInc.sql');
-        } catch (Throwable $e) {
-            echo "[class365] Trigger load warning: " . $e->getMessage() . PHP_EOL;
-        }
-    }
-
-    $conn->query("INSERT IGNORE INTO app (`name`, `value`) VALUES
-        ('version', '9.3'),
-        ('date', '" . $conn->real_escape_string(date('F d, Y')) . "'),
-        ('build', '" . $conn->real_escape_string(date('mdY') . '001') . "'),
-        ('update', '0'),
-        ('last_updated', '" . $conn->real_escape_string(date('F d, Y')) . "')");
-
-    // Super-admin profile id 0 (openSIS convention). NO_AUTO_VALUE_ON_ZERO is required.
+/**
+ * Always repair the rows the login JOIN needs: profile 0, school year,
+ * staff 1, login_authentication, and staff_school_relationship for the
+ * current year. A half-finished first boot previously left admin/demo123
+ * able to verify the password while STAFF_ID stayed empty.
+ */
+function class365_ensure_admin_seed(
+    mysqli $conn,
+    string $schoolName,
+    string $schoolCity,
+    string $schoolState,
+    string $adminUser,
+    string $adminPass,
+    string $adminFirst,
+    string $adminLast,
+    string $adminEmail,
+    int $syear
+): void {
     $conn->query("SET SESSION sql_mode = 'NO_AUTO_VALUE_ON_ZERO'");
-    $conn->query("INSERT IGNORE INTO user_profiles (id, profile, title) VALUES
-        (0, 'admin', 'Super Administrator')");
-    $conn->query("INSERT IGNORE INTO user_profiles (id, profile, title) VALUES
-        (1, 'admin', 'Administrator'),
-        (2, 'teacher', 'Teacher'),
-        (3, 'student', 'Student'),
-        (4, 'parent', 'Parent')");
+    $conn->query("SET NAMES utf8 COLLATE utf8_unicode_ci");
 
     $sn = $conn->real_escape_string($schoolName);
     $city = $conn->real_escape_string($schoolCity);
     $state = $conn->real_escape_string($schoolState);
-    $conn->query("INSERT IGNORE INTO schools (id, syear, title, address, city, state, zipcode, phone, e_mail, reporting_gp_scale)
-        VALUES (1, {$syear}, '{$sn}', 'Kumul Highway', '{$city}', '{$state}', 'VU', '+678 22000', 'office@class365.edu', 4.000)");
-
-    $conn->query("INSERT IGNORE INTO school_years (marking_period_id, syear, school_id, title, short_name, sort_order, start_date, end_date, does_grades)
-        VALUES (1, {$syear}, 1, 'Full Year', 'FY', 1, '{$syear}-01-01', '{$syear}-12-31', 'Y')");
-
     $af = $conn->real_escape_string($adminFirst);
     $al = $conn->real_escape_string($adminLast);
     $ae = $conn->real_escape_string($adminEmail);
     $au = $conn->real_escape_string($adminUser);
     $hashEsc = $conn->real_escape_string(password_hash($adminPass, PASSWORD_DEFAULT));
-
-    $conn->query("INSERT IGNORE INTO staff (staff_id, current_school_id, title, first_name, last_name, email, profile, profile_id)
-        VALUES (1, 1, 'Ms', '{$af}', '{$al}', '{$ae}', 'admin', 0)");
-
-    $conn->query("INSERT IGNORE INTO login_authentication (id, user_id, profile_id, username, password, failed_login)
-        VALUES (1, 1, 0, '{$au}', '{$hashEsc}', 0)");
-
-    $conn->query("INSERT IGNORE INTO staff_school_info (staff_id, category, job_title, home_school, opensis_access, opensis_profile, school_access)
-        VALUES (1, 'Admin', 'Registrar', 1, 'Y', 'admin', ',1,')");
-
-    $conn->query("INSERT IGNORE INTO staff_school_relationship (staff_id, school_id, syear, start_date)
-        VALUES (1, 1, {$syear}, '{$syear}-01-01')");
-
     $msg = $conn->real_escape_string(
         'Welcome to Class 365 — Harbour Academy Port Vila, Vanuatu. Fees and reports use Vanuatu Vatu (VT).'
     );
-    $conn->query("INSERT IGNORE INTO login_message (id, message, display) VALUES (1, '{$msg}', 'Y')");
 
-    $conn->query("INSERT IGNORE INTO program_config (syear, school_id, program, title, value) VALUES
+    class365_must_query($conn, "INSERT IGNORE INTO app (`name`, `value`) VALUES
+        ('version', '9.3'),
+        ('date', '" . $conn->real_escape_string(date('F d, Y')) . "'),
+        ('build', '" . $conn->real_escape_string(date('mdY') . '001') . "'),
+        ('update', '0'),
+        ('last_updated', '" . $conn->real_escape_string(date('F d, Y')) . "')", 'app seed');
+
+    class365_must_query($conn, "INSERT IGNORE INTO user_profiles (id, profile, title) VALUES
+        (0, 'admin', 'Super Administrator')", 'super admin profile');
+    class365_must_query($conn, "INSERT IGNORE INTO user_profiles (id, profile, title) VALUES
+        (1, 'admin', 'Administrator'),
+        (2, 'teacher', 'Teacher'),
+        (3, 'student', 'Student'),
+        (4, 'parent', 'Parent')", 'user profiles');
+
+    class365_must_query($conn, "INSERT IGNORE INTO schools (id, syear, title, address, city, state, zipcode, phone, e_mail, reporting_gp_scale)
+        VALUES (1, {$syear}, '{$sn}', 'Kumul Highway', '{$city}', '{$state}', 'VU', '+678 22000', 'office@class365.edu', 4.000)", 'school');
+    class365_must_query($conn, "UPDATE schools SET title='{$sn}', city='{$city}', state='{$state}', syear={$syear} WHERE id=1", 'school branding');
+
+    $yearExists = $conn->query("SELECT 1 FROM school_years WHERE school_id=1 AND syear={$syear} LIMIT 1");
+    if (!$yearExists || $yearExists->num_rows === 0) {
+        class365_must_query($conn, "INSERT INTO school_years (marking_period_id, syear, school_id, title, short_name, sort_order, start_date, end_date, does_grades)
+            VALUES (1, {$syear}, 1, 'Full Year', 'FY', 1, '{$syear}-01-01', '{$syear}-12-31', 'Y')", 'school year');
+    } else {
+        class365_must_query($conn, "UPDATE school_years SET start_date='{$syear}-01-01', end_date='{$syear}-12-31'
+            WHERE school_id=1 AND syear={$syear}", 'school year dates');
+    }
+    if ($yearExists) {
+        $yearExists->free();
+    }
+
+    $staffExists = $conn->query("SELECT staff_id FROM staff WHERE staff_id=1 LIMIT 1");
+    if ($staffExists && $staffExists->num_rows > 0) {
+        class365_must_query($conn, "UPDATE staff SET current_school_id=1, title='Ms', first_name='{$af}', last_name='{$al}',
+            email='{$ae}', profile='admin', profile_id=0, is_disable=NULL WHERE staff_id=1", 'staff update');
+    } else {
+        class365_must_query($conn, "INSERT INTO staff (staff_id, current_school_id, title, first_name, last_name, email, profile, profile_id, is_disable)
+            VALUES (1, 1, 'Ms', '{$af}', '{$al}', '{$ae}', 'admin', 0, NULL)", 'staff insert');
+    }
+    if ($staffExists) {
+        $staffExists->free();
+    }
+
+    // UPDATE fires tu_login_authentication, which compares usernames across
+    // mixed utf8_unicode_ci / utf8_general_ci columns and fatals the seed.
+    class365_must_query($conn, "DELETE FROM login_authentication WHERE user_id=1 AND profile_id=0", 'login delete');
+    class365_must_query($conn, "INSERT INTO login_authentication (user_id, profile_id, username, password, failed_login)
+        VALUES (1, 0, '{$au}', '{$hashEsc}', 0)", 'login insert');
+
+    $infoExists = $conn->query("SELECT staff_id FROM staff_school_info WHERE staff_id=1 LIMIT 1");
+    if ($infoExists && $infoExists->num_rows > 0) {
+        class365_must_query($conn, "UPDATE staff_school_info SET category='Admin', job_title='Registrar', home_school=1,
+            opensis_access='Y', opensis_profile='admin', school_access=',1,' WHERE staff_id=1", 'staff_school_info update');
+    } else {
+        class365_must_query($conn, "INSERT INTO staff_school_info (staff_id, category, job_title, home_school, opensis_access, opensis_profile, school_access)
+            VALUES (1, 'Admin', 'Registrar', 1, 'Y', 'admin', ',1,')", 'staff_school_info insert');
+    }
+    if ($infoExists) {
+        $infoExists->free();
+    }
+
+    $relExists = $conn->query("SELECT staff_id FROM staff_school_relationship WHERE staff_id=1 AND school_id=1 AND syear={$syear} LIMIT 1");
+    if ($relExists && $relExists->num_rows > 0) {
+        class365_must_query($conn, "UPDATE staff_school_relationship SET start_date='{$syear}-01-01', end_date=NULL
+            WHERE staff_id=1 AND school_id=1 AND syear={$syear}", 'relationship update');
+    } else {
+        class365_must_query($conn, "INSERT INTO staff_school_relationship (staff_id, school_id, syear, start_date, end_date)
+            VALUES (1, 1, {$syear}, '{$syear}-01-01', NULL)", 'relationship insert');
+    }
+    if ($relExists) {
+        $relExists->free();
+    }
+
+    class365_must_query($conn, "INSERT IGNORE INTO login_message (id, message, display) VALUES (1, '{$msg}', 'Y')", 'login_message');
+
+    class365_must_query($conn, "INSERT IGNORE INTO program_config (syear, school_id, program, title, value) VALUES
         ({$syear}, NULL, 'Currency', 'Vanuatu Vatu (VUV)', '1'),
         ({$syear}, 1, 'UPDATENOTIFY', 'display', 'Y'),
-        ({$syear}, 1, 'UPDATENOTIFY', 'display_school', 'Y')");
+        ({$syear}, 1, 'UPDATENOTIFY', 'display_school', 'Y')", 'program_config');
 
-    $conn->query("INSERT IGNORE INTO program_user_config (user_id, school_id, program, title, value) VALUES
+    class365_must_query($conn, "INSERT IGNORE INTO program_user_config (user_id, school_id, program, title, value) VALUES
         (1, NULL, 'Preferences', 'THEME', 'blue'),
         (1, NULL, 'Preferences', 'CURRENCY', '1'),
-        (1, NULL, 'Preferences', 'HIDDEN', 'Y')");
+        (1, NULL, 'Preferences', 'HIDDEN', 'Y')", 'program_user_config');
 
-    $conn->query("INSERT IGNORE INTO system_preference_misc (fail_count, activity_days, system_maintenance_switch)
-        VALUES (5, 30, 'N')");
+    class365_must_query($conn, "INSERT IGNORE INTO system_preference_misc (fail_count, activity_days, system_maintenance_switch)
+        VALUES (5, 30, 'N')", 'system_preference_misc');
+    class365_must_query($conn, "UPDATE system_preference_misc SET system_maintenance_switch='N'", 'clear maintenance');
 
     $grades = [
         [1, 'K', 'Kindy', 2],
@@ -149,27 +187,61 @@ if ($installed) {
     foreach ($grades as $i => [$id, $short, $title, $next]) {
         $sort = $i + 1;
         $nextSql = $next === null ? 'NULL' : (string) $next;
+        $titleEsc = $conn->real_escape_string($title);
         $conn->query("INSERT IGNORE INTO school_gradelevels (id, school_id, short_name, title, next_grade_id, sort_order)
-            VALUES ({$id}, 1, '{$short}', '{$title}', {$nextSql}, {$sort})");
+            VALUES ({$id}, 1, '{$short}', '{$titleEsc}', {$nextSql}, {$sort})");
     }
 
     $conn->query("INSERT IGNORE INTO school_calendars (school_id, title, syear, calendar_id, default_calendar, days)
         VALUES (1, 'Main Calendar {$syear}', {$syear}, 1, 'Y', 'MTWHF')");
 
-    echo "[class365] Fresh Class 365 install complete." . PHP_EOL;
-    echo "[class365] Admin login: {$adminUser} / {$adminPass}" . PHP_EOL;
+    echo "[class365] Admin seed ready: {$adminUser} / {$adminPass}" . PHP_EOL;
 }
 
-// Keep school branding current on every boot
-$sn = $conn->real_escape_string($schoolName);
-$city = $conn->real_escape_string($schoolCity);
-$state = $conn->real_escape_string($schoolState);
-$conn->query("UPDATE schools SET title='{$sn}', city='{$city}', state='{$state}' WHERE id=1");
+echo "[class365] Connecting to {$host}:{$port}/{$db}" . PHP_EOL;
+$conn = connect($host, $user, $pass, $db, $port);
 
-// Ensure admin password matches env on every boot (demo convenience)
-$au = $conn->real_escape_string($adminUser);
-$hashEsc = $conn->real_escape_string(password_hash($adminPass, PASSWORD_DEFAULT));
-$conn->query("UPDATE login_authentication SET username='{$au}', password='{$hashEsc}', failed_login=0 WHERE user_id=1 AND profile_id=0");
+$installed = false;
+$check = $conn->query("SHOW TABLES LIKE 'login_authentication'");
+if ($check && $check->num_rows > 0) {
+    $rows = $conn->query("SELECT 1 FROM login_authentication LIMIT 1");
+    $installed = $rows && $rows->num_rows > 0;
+    if ($rows) {
+        $rows->free();
+    }
+}
+if ($check) {
+    $check->free();
+}
+
+if ($installed) {
+    echo "[class365] Schema already present — repairing admin seed." . PHP_EOL;
+} else {
+    $base = __DIR__ . '/../install';
+    runSqlFile($conn, $base . '/OpensisSchemaMysqlInc.sql');
+    runSqlFile($conn, $base . '/OpensisProcsMysqlInc.sql');
+    if (is_readable($base . '/OpensisTriggerMysqlInc.sql')) {
+        try {
+            runSqlFile($conn, $base . '/OpensisTriggerMysqlInc.sql');
+        } catch (Throwable $e) {
+            echo "[class365] Trigger load warning: " . $e->getMessage() . PHP_EOL;
+        }
+    }
+    echo "[class365] Fresh Class 365 schema installed." . PHP_EOL;
+}
+
+class365_ensure_admin_seed(
+    $conn,
+    $schoolName,
+    $schoolCity,
+    $schoolState,
+    $adminUser,
+    $adminPass,
+    $adminFirst,
+    $adminLast,
+    $adminEmail,
+    $syear
+);
 
 $conn->close();
 echo "[class365] Bootstrap finished." . PHP_EOL;
