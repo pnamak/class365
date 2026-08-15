@@ -26,35 +26,16 @@ function connect(string $host, string $user, string $pass, string $db, int $port
     if ($conn->connect_errno) {
         throw new RuntimeException('DB connect failed: ' . $conn->connect_error);
     }
-    $conn->query("SET SESSION sql_mode = ''");
+    $conn->query("SET SESSION sql_mode = 'NO_AUTO_VALUE_ON_ZERO'");
     $conn->set_charset('utf8');
     return $conn;
 }
 
+require_once __DIR__ . '/sql_runner.php';
+
 function runSqlFile(mysqli $conn, string $path): void
 {
-    if (!is_readable($path)) {
-        throw new RuntimeException("Missing SQL file: $path");
-    }
-    $sql = file_get_contents($path);
-    if ($sql === false || trim($sql) === '') {
-        return;
-    }
-    $sql = preg_replace('/^DELIMITER .*$/mi', '', $sql) ?? $sql;
-
-    if (!$conn->multi_query($sql)) {
-        throw new RuntimeException("SQL error in $path: " . $conn->error);
-    }
-    do {
-        if ($result = $conn->store_result()) {
-            $result->free();
-        }
-    } while ($conn->more_results() && $conn->next_result());
-
-    if ($conn->errno) {
-        throw new RuntimeException("SQL error after $path: " . $conn->error);
-    }
-    echo "[class365] Loaded " . basename($path) . PHP_EOL;
+    class365_run_sql_file($conn, $path);
 }
 
 echo "[class365] Connecting to {$host}:{$port}/{$db}" . PHP_EOL;
@@ -63,7 +44,11 @@ $conn = connect($host, $user, $pass, $db, $port);
 $installed = false;
 $check = $conn->query("SHOW TABLES LIKE 'login_authentication'");
 if ($check && $check->num_rows > 0) {
-    $installed = true;
+    $rows = $conn->query("SELECT 1 FROM login_authentication LIMIT 1");
+    $installed = $rows && $rows->num_rows > 0;
+    if ($rows) {
+        $rows->free();
+    }
 }
 if ($check) {
     $check->free();
@@ -83,18 +68,18 @@ if ($installed) {
         }
     }
 
-    $conn->query("INSERT INTO app (`name`, `value`) VALUES
+    $conn->query("INSERT IGNORE INTO app (`name`, `value`) VALUES
         ('version', '9.3'),
         ('date', '" . $conn->real_escape_string(date('F d, Y')) . "'),
-        ('build', 'class365'),
+        ('build', '" . $conn->real_escape_string(date('mdY') . '001') . "'),
         ('update', '0'),
         ('last_updated', '" . $conn->real_escape_string(date('F d, Y')) . "')");
 
-    // Super-admin profile id 0 (openSIS convention)
-    $conn->query("SET sql_mode=''");
-    $conn->query("INSERT INTO user_profiles (id, profile, title) VALUES
+    // Super-admin profile id 0 (openSIS convention). NO_AUTO_VALUE_ON_ZERO is required.
+    $conn->query("SET SESSION sql_mode = 'NO_AUTO_VALUE_ON_ZERO'");
+    $conn->query("INSERT IGNORE INTO user_profiles (id, profile, title) VALUES
         (0, 'admin', 'Super Administrator')");
-    $conn->query("INSERT INTO user_profiles (id, profile, title) VALUES
+    $conn->query("INSERT IGNORE INTO user_profiles (id, profile, title) VALUES
         (1, 'admin', 'Administrator'),
         (2, 'teacher', 'Teacher'),
         (3, 'student', 'Student'),
@@ -103,10 +88,10 @@ if ($installed) {
     $sn = $conn->real_escape_string($schoolName);
     $city = $conn->real_escape_string($schoolCity);
     $state = $conn->real_escape_string($schoolState);
-    $conn->query("INSERT INTO schools (id, syear, title, address, city, state, zipcode, phone, e_mail, reporting_gp_scale)
+    $conn->query("INSERT IGNORE INTO schools (id, syear, title, address, city, state, zipcode, phone, e_mail, reporting_gp_scale)
         VALUES (1, {$syear}, '{$sn}', 'Kumul Highway', '{$city}', '{$state}', 'VU', '+678 22000', 'office@class365.edu', 4.000)");
 
-    $conn->query("INSERT INTO school_years (marking_period_id, syear, school_id, title, short_name, sort_order, start_date, end_date, does_grades)
+    $conn->query("INSERT IGNORE INTO school_years (marking_period_id, syear, school_id, title, short_name, sort_order, start_date, end_date, does_grades)
         VALUES (1, {$syear}, 1, 'Full Year', 'FY', 1, '{$syear}-01-01', '{$syear}-12-31', 'Y')");
 
     $af = $conn->real_escape_string($adminFirst);
@@ -115,34 +100,34 @@ if ($installed) {
     $au = $conn->real_escape_string($adminUser);
     $hashEsc = $conn->real_escape_string(password_hash($adminPass, PASSWORD_DEFAULT));
 
-    $conn->query("INSERT INTO staff (staff_id, current_school_id, title, first_name, last_name, email, profile, profile_id)
+    $conn->query("INSERT IGNORE INTO staff (staff_id, current_school_id, title, first_name, last_name, email, profile, profile_id)
         VALUES (1, 1, 'Ms', '{$af}', '{$al}', '{$ae}', 'admin', 0)");
 
-    $conn->query("INSERT INTO login_authentication (id, user_id, profile_id, username, password, failed_login)
+    $conn->query("INSERT IGNORE INTO login_authentication (id, user_id, profile_id, username, password, failed_login)
         VALUES (1, 1, 0, '{$au}', '{$hashEsc}', 0)");
 
-    $conn->query("INSERT INTO staff_school_info (staff_id, category, job_title, home_school, opensis_access, opensis_profile, school_access)
+    $conn->query("INSERT IGNORE INTO staff_school_info (staff_id, category, job_title, home_school, opensis_access, opensis_profile, school_access)
         VALUES (1, 'Admin', 'Registrar', 1, 'Y', 'admin', ',1,')");
 
-    $conn->query("INSERT INTO staff_school_relationship (staff_id, school_id, syear, start_date)
+    $conn->query("INSERT IGNORE INTO staff_school_relationship (staff_id, school_id, syear, start_date)
         VALUES (1, 1, {$syear}, '{$syear}-01-01')");
 
     $msg = $conn->real_escape_string(
         'Welcome to Class 365 — Harbour Academy Port Vila, Vanuatu. Fees and reports use Vanuatu Vatu (VT).'
     );
-    $conn->query("INSERT INTO login_message (id, message, display) VALUES (1, '{$msg}', 'Y')");
+    $conn->query("INSERT IGNORE INTO login_message (id, message, display) VALUES (1, '{$msg}', 'Y')");
 
-    $conn->query("INSERT INTO program_config (syear, school_id, program, title, value) VALUES
+    $conn->query("INSERT IGNORE INTO program_config (syear, school_id, program, title, value) VALUES
         ({$syear}, NULL, 'Currency', 'Vanuatu Vatu (VUV)', '1'),
         ({$syear}, 1, 'UPDATENOTIFY', 'display', 'Y'),
         ({$syear}, 1, 'UPDATENOTIFY', 'display_school', 'Y')");
 
-    $conn->query("INSERT INTO program_user_config (user_id, school_id, program, title, value) VALUES
+    $conn->query("INSERT IGNORE INTO program_user_config (user_id, school_id, program, title, value) VALUES
         (1, NULL, 'Preferences', 'THEME', 'blue'),
         (1, NULL, 'Preferences', 'CURRENCY', '1'),
         (1, NULL, 'Preferences', 'HIDDEN', 'Y')");
 
-    $conn->query("INSERT INTO system_preference_misc (fail_count, activity_days, system_maintenance_switch)
+    $conn->query("INSERT IGNORE INTO system_preference_misc (fail_count, activity_days, system_maintenance_switch)
         VALUES (5, 30, 'N')");
 
     $grades = [
@@ -164,11 +149,11 @@ if ($installed) {
     foreach ($grades as $i => [$id, $short, $title, $next]) {
         $sort = $i + 1;
         $nextSql = $next === null ? 'NULL' : (string) $next;
-        $conn->query("INSERT INTO school_gradelevels (id, school_id, short_name, title, next_grade_id, sort_order)
+        $conn->query("INSERT IGNORE INTO school_gradelevels (id, school_id, short_name, title, next_grade_id, sort_order)
             VALUES ({$id}, 1, '{$short}', '{$title}', {$nextSql}, {$sort})");
     }
 
-    $conn->query("INSERT INTO school_calendars (school_id, title, syear, calendar_id, default_calendar, days)
+    $conn->query("INSERT IGNORE INTO school_calendars (school_id, title, syear, calendar_id, default_calendar, days)
         VALUES (1, 'Main Calendar {$syear}', {$syear}, 1, 'Y', 'MTWHF')");
 
     echo "[class365] Fresh Class 365 install complete." . PHP_EOL;
