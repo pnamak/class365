@@ -42,18 +42,25 @@ else {
     db_start();
 
     $sql = DBQuery("select value from app where name='build'");
-    $build = $sql->fetch_assoc();
-    $month = substr($build['value'],0,2);
-    $day = substr($build['value'],2,2);
-    $year = substr($build['value'],4,4);
-    $revision = substr($build['value'],8,3);
+    // DBQuery returns false for non-browser clients and when the schema is missing.
+    // Never call fetch_assoc() on that — it fatals on PHP 8 and blanks the login page.
+    if ($sql instanceof mysqli_result) {
+        $build = $sql->fetch_assoc();
+        if (is_array($build) && isset($build['value']) && preg_match('/^\d{8}/', (string) $build['value'])) {
+            $month = (int) substr($build['value'],0,2);
+            $day = (int) substr($build['value'],2,2);
+            $year = (int) substr($build['value'],4,4);
+            $revision = substr($build['value'],8,3);
 
-    $build_date = mktime(0,0,0,$month,$day,$year);
-    if ($build_date < mktime(0,0,0,5,28,2009))
-    {
-        if($revision == '000') {
-            // redirect user to the upgrade procedure
-            header('Location: install/index.php?upreq=true');
+            $build_date = mktime(0,0,0,$month,$day,$year);
+            if ($build_date < mktime(0,0,0,5,28,2009))
+            {
+                if($revision == '000') {
+                    // redirect user to the upgrade procedure
+                    header('Location: install/index.php?upreq=true');
+                    exit;
+                }
+            }
         }
     }
 }

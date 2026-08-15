@@ -47,6 +47,7 @@ $index_commit_out   =   "";
 $url = validateQueryString(curPageURL());
 if ($url === FALSE) {
     header('Location: index.php');
+    exit;
 }
 
 if (!defined("_eitherYourAccountIsInactiveOrYourAccessPermissionHasBeenRevoked")) {
