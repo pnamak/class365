@@ -1,43 +1,42 @@
-# Class 365 / openSIS
+# Class 365
 
-This repository has been reset and rebased on **[OS4ED openSIS Classic](https://github.com/OS4ED/openSIS-Classic)** (Community Edition).
+**Class 365** is a school management system for schools in **Vanuatu**, built on [OS4ED openSIS Classic](https://github.com/OS4ED/openSIS-Classic).
 
-Upstream project details follow.
+Demo campus: **Harbour Academy Port Vila** (Shefa, Vanuatu). Billing/currency context: **Vanuatu Vatu (VT / VUV)**.
 
----
+## Stack
 
-# openSIS Classic
-Community Edition version 9.3 (Rel date: 06/02/2026)
-Created by [OS4ED](https://www.os4ed.com/)
+- PHP 8.2 + Apache
+- MariaDB 10.11
+- openSIS Classic CE 9.3 modules (students, staff, scheduling, attendance, grades, messaging, …)
 
-openSIS is an easy to use Student Information System for organizing student information and school-related operations to promote efficiency in K-12, trade schools and higher education school systems.
+## Quick start (Docker)
 
-## Key Features
+```bash
+docker compose up -d --build
+```
 
-- Manage Student Data
-- Manage Staff Data
-- Manage School Data
-- Course Manager
-- Scheduling
-- Attendance
-- Grades
-- Teacher Gradebook
-- Progress Reports
-- Report Cards
-- Transcripts
-- Built-in Communication
-- Bulk data imports
+Open http://localhost:8080
 
-## Installation
+| Field | Value |
+| --- | --- |
+| Username | `admin` |
+| Password | `demo123` |
 
-openSIS Community Edition requires
-- Apache 2.4 or above
-- MySQL 5.7, 8.0 or Maria DB 10.4.x
-- PHP 8.x
+## Coolify deploy
 
-[Installation Details](https://github.com/OS4ED/openSIS-Classic/blob/master/docs/openSIS-CE%20Installation%20Guide.pdf)
+1. Push this branch to GitHub.
+2. In Coolify, create an application from this repo with **Docker Compose** build pack (`docker-compose.yml`), **or** run:
 
+```bash
+export COOLIFY_URL="https://YOUR-COOLIFY-HOST"
+export COOLIFY_TOKEN="2|...."
+chmod +x scripts/deploy-coolify.sh
+./scripts/deploy-coolify.sh
+```
+
+`COOLIFY_URL` must be your Coolify instance base URL (Cloud token alone is not enough for self-hosted; `app.coolify.io` rejected this token as unauthenticated).
 
 ## License
 
-openSIS is an Open Source Project licensed under the GNU General Public License, the full license can be found [here](https://github.com/OS4ED/openSIS-Classic/blob/master/docs/License.txt).
+openSIS is GPL-2.0 — see `docs/License.txt`.

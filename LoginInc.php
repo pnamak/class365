@@ -94,9 +94,10 @@ require_once('functions/langFnc.php');
 
                 <div class="panel-heading">
                     <div class="logo">
-                        <img src="assets/images/opensis_logo.png" alt="openSIS" />
+                        <img src="assets/images/opensis_logo.png" alt="Class 365" />
                     </div>                    
-                    <h3><?= _studentInformationSystem ?></h3>
+                    <h3>Class 365</h3>
+                    <p class="text-muted" style="margin:8px 0 0;font-size:13px;">Harbour Academy Port Vila · Vanuatu</p>
                 </div>
                 <div class="panel-body">
 
@@ -107,7 +108,7 @@ require_once('functions/langFnc.php');
                         <div class="col-md-12">
                             <?php
                             if ($_REQUEST['reason'])
-                                $note[] = 'You must have javascript enabled to use openSIS.';
+                                $note[] = 'You must have javascript enabled to use Class 365.';
 
                             if ($error[0] != '') {
                                 ?>
@@ -125,7 +126,7 @@ require_once('functions/langFnc.php');
                                 if ($maintain_qr[1]['SYSTEM_MAINTENANCE_SWITCH'] == 'Y') {
                                     ?>
                                     <div class="form-group">
-                                        <h4 class="text-center text-danger"><i class="icon-warning22" style="font-size: 50px;"></i><br/><br/>openSIS is under maintenance and login privileges have been turned off. Please log in when it is available again.</h4>
+                                        <h4 class="text-center text-danger"><i class="icon-warning22" style="font-size: 50px;"></i><br/><br/>Class 365 is under maintenance and login privileges have been turned off. Please log in when it is available again.</h4>
                                     </div> 
                                     <?php
                                 }
