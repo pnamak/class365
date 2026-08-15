@@ -38,12 +38,15 @@ EOF
 }
 
 if [ "$AUTO_INSTALL" = "true" ]; then
-  wait_for_db
-  write_data_php
-  php /var/www/html/docker/bootstrap.php || {
-    echo "[class365] Bootstrap failed" >&2
-    exit 1
-  }
+  # Never block Apache forever — log bootstrap failures and still serve HTTP
+  # so Coolify healthchecks / Traefik can reach the container during recovery.
+  if wait_for_db; then
+    write_data_php
+    php /var/www/html/docker/bootstrap.php || echo "[class365] Bootstrap failed (continuing)" >&2
+  else
+    write_data_php
+    echo "[class365] Database not ready — starting Apache anyway" >&2
+  fi
 fi
 
 # Ensure writable dirs
