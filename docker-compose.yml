@@ -11,6 +11,11 @@ services:
     # Explicit Traefik port so Coolify proxy can route (avoids 404 / "port is missing")
     labels:
       - traefik.http.services.app.loadbalancer.server.port=80
+    # Traefik (coolify-proxy) only shares the external `coolify` network.
+    # Without this, HTTPS returns "no available server" even when containers are healthy.
+    networks:
+      - default
+      - coolify
     environment:
       APP_NAME: Class 365
       SCHOOL_NAME: Harbour Academy Port Vila
@@ -40,11 +45,13 @@ services:
       interval: 30s
       timeout: 5s
       retries: 5
-      start_period: 90s
+      start_period: 120s
 
   db:
     image: mariadb:10.11
     restart: unless-stopped
+    networks:
+      - default
     environment:
       MYSQL_ROOT_PASSWORD: class365root
       MYSQL_DATABASE: class365
@@ -62,3 +69,7 @@ volumes:
   class365-data:
   class365-staff:
   class365-mysql:
+
+networks:
+  coolify:
+    external: true
