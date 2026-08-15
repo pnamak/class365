@@ -1,0 +1,15 @@
+# Local / runtime
+.env
+.env.*
+!.env.example
+*.log
+.DS_Store
+
+# openSIS install / data (keep templates, ignore local config if present)
+Data.php
+data.php.bak
+
+# Composer / IDE
+/vendor/
+.idea/
+.vscode/
