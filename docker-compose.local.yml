@@ -1,0 +1,5 @@
+# Local override — maps app to localhost:8080
+services:
+  app:
+    ports:
+      - "8080:80"

@@ -4,9 +4,10 @@ services:
       context: .
       dockerfile: Dockerfile
     restart: unless-stopped
-    # Coolify proxies to the container port; local docker compose maps 8080.
-    ports:
-      - "8080:80"
+    # Coolify routes via reverse proxy — do not bind host ports here.
+    # For local access: docker compose -f docker-compose.yml -f docker-compose.local.yml up
+    expose:
+      - "80"
     environment:
       APP_NAME: Class 365
       SCHOOL_NAME: Harbour Academy Port Vila
@@ -36,7 +37,7 @@ services:
       interval: 30s
       timeout: 5s
       retries: 5
-      start_period: 60s
+      start_period: 90s
 
   db:
     image: mariadb:10.11
