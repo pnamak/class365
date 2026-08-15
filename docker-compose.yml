@@ -8,6 +8,9 @@ services:
     # For local access: docker compose -f docker-compose.yml -f docker-compose.local.yml up
     expose:
       - "80"
+    # Explicit Traefik port so Coolify proxy can route (avoids 404 / "port is missing")
+    labels:
+      - traefik.http.services.app.loadbalancer.server.port=80
     environment:
       APP_NAME: Class 365
       SCHOOL_NAME: Harbour Academy Port Vila
