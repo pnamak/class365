@@ -1217,16 +1217,26 @@ function replace_croatain($str)
 
 function curPageURL()
 {
-   $pageURL = 'http';
-   if ($_SERVER["HTTPS"] == "on") {
-      $pageURL .= "s";
+   $https = false;
+   $httpsFlag = $_SERVER['HTTPS'] ?? '';
+   if ($httpsFlag !== '' && strtolower((string) $httpsFlag) !== 'off') {
+      $https = true;
    }
-   $pageURL .= "://";
-   if ($_SERVER["SERVER_PORT"] != "80") {
-      $pageURL .= $_SERVER["SERVER_NAME"] . ":" . $_SERVER["SERVER_PORT"] . $_SERVER["REQUEST_URI"];
-   } else {
-      $pageURL .= $_SERVER["SERVER_NAME"] . $_SERVER["REQUEST_URI"];
+   $forwarded = strtolower((string) ($_SERVER['HTTP_X_FORWARDED_PROTO'] ?? ''));
+   if ($forwarded === 'https') {
+      $https = true;
    }
+
+   $host = $_SERVER['HTTP_X_FORWARDED_HOST'] ?? $_SERVER['HTTP_HOST'] ?? $_SERVER['SERVER_NAME'] ?? 'localhost';
+   $host = trim(explode(',', (string) $host)[0]);
+   $port = (string) ($_SERVER['SERVER_PORT'] ?? ($https ? '443' : '80'));
+   $uri = (string) ($_SERVER['REQUEST_URI'] ?? '/');
+
+   $pageURL = ($https ? 'https' : 'http') . '://' . $host;
+   if (strpos($host, ':') === false && $port !== '' && $port !== '80' && $port !== '443') {
+      $pageURL .= ':' . $port;
+   }
+   $pageURL .= $uri;
 
    return $pageURL;
    //

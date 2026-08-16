@@ -93,4 +93,16 @@ try {
     exit(1);
 }
 
+$ex = $conn->query("SELECT COUNT(*) AS c FROM profile_exceptions WHERE profile_id=0 AND can_use='Y'");
+$row = $ex ? $ex->fetch_assoc() : null;
+if (!$row || (int) $row['c'] < 20) {
+    fwrite(STDERR, "profile_exceptions for super admin were not seeded\n");
+    exit(1);
+}
+$period = $conn->query("SELECT 1 FROM profile_exceptions WHERE profile_id=0 AND modname='schoolsetup/Periods.php' AND can_use='Y'");
+if (!$period || $period->num_rows === 0) {
+    fwrite(STDERR, "schoolsetup/Periods.php was not granted to super admin\n");
+    exit(1);
+}
+
 echo "OK bootstrap_seed_test\n";

@@ -931,6 +931,9 @@ if ($_REQUEST['modname'] || $_GET['modname']) {
         $_SESSION['_REQUEST_vars'] = $_REQUEST;
 
     $allowed = false;
+    if (User('PROFILE_ID') === 0 || User('PROFILE_ID') === '0') {
+        $allowed = true;
+    }
     include 'Menu.php';
 
     foreach ($_openSIS['Menu'] as $modcat => $programs) {

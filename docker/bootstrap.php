@@ -214,7 +214,61 @@ function class365_ensure_admin_seed(
     $conn->query("INSERT IGNORE INTO school_calendars (school_id, title, syear, calendar_id, default_calendar, days)
         VALUES (1, 'Main Calendar {$syear}', {$syear}, 1, 'Y', 'MTWHF')");
 
+    class365_ensure_profile_exceptions($conn);
+
     echo "[class365] Admin seed ready: {$adminUser} / {$adminPass}" . PHP_EOL;
+}
+
+/**
+ * Super Administrator (profile 0) and Administrator (profile 1) need
+ * profile_exceptions rows or Menu.php builds an empty menu and Modules.php
+ * treats every click as a hacking attempt.
+ */
+function class365_ensure_profile_exceptions(mysqli $conn): void
+{
+    $mods = [];
+    foreach (glob(dirname(__DIR__) . '/modules/*/Menu.php') ?: [] as $file) {
+        $src = (string) file_get_contents($file);
+        if (preg_match_all("/'((?:[a-zA-Z0-9_]+\\/)+[a-zA-Z0-9_\\.]+\\.php(?:\\?[^']*)?)'\\s*=>/", $src, $m)) {
+            foreach ($m[1] as $mod) {
+                $mods[$mod] = true;
+            }
+        }
+    }
+    $extra = [
+        'students/Student.php&category_id=1',
+        'students/Student.php&category_id=2',
+        'students/Student.php&category_id=3',
+        'students/Student.php&category_id=4',
+        'students/Student.php&category_id=5',
+        'students/Student.php&category_id=6',
+        'students/Student.php&category_id=7',
+        'users/User.php&category_id=1',
+        'users/User.php&category_id=5',
+        'users/Staff.php&category_id=1',
+        'miscellaneous/Portal.php',
+        'miscellaneous/Export.php',
+    ];
+    foreach ($extra as $mod) {
+        $mods[$mod] = true;
+    }
+
+    $count = 0;
+    foreach (array_keys($mods) as $mod) {
+        $esc = $conn->real_escape_string($mod);
+        foreach ([0, 1] as $pid) {
+            $exists = $conn->query("SELECT 1 FROM profile_exceptions WHERE profile_id={$pid} AND modname='{$esc}' LIMIT 1");
+            if (!$exists || $exists->num_rows === 0) {
+                $conn->query("INSERT INTO profile_exceptions (profile_id, modname, can_use, can_edit)
+                    VALUES ({$pid}, '{$esc}', 'Y', 'Y')");
+                $count++;
+            }
+            if ($exists) {
+                $exists->free();
+            }
+        }
+    }
+    echo "[class365] Profile exceptions ready ({$count} inserted)." . PHP_EOL;
 }
 
 echo "[class365] Connecting to {$host}:{$port}/{$db}" . PHP_EOL;

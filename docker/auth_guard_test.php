@@ -31,6 +31,23 @@ expect(class365_has_session_user(), 'STAFF_ID 1 is a session user');
 $_SESSION = ['STUDENT_ID' => 9];
 expect(class365_has_session_user(), 'STUDENT_ID is a session user');
 
+require_once dirname(__DIR__) . '/functions/ParamLibFnc.php';
+
+$_SERVER = [
+    'SERVER_NAME' => 'class365.smartech.pn.vu',
+    'SERVER_PORT' => '80',
+    'REQUEST_URI' => '/Modules.php?modname=schoolsetup/Periods.php',
+];
+unset($_SERVER['HTTPS']);
+$url = curPageURL();
+expect(!str_contains($url, 'Warning'), 'curPageURL does not warn');
+expect(str_starts_with($url, 'http://class365.smartech.pn.vu/Modules.php'), 'curPageURL builds http URL without HTTPS key: ' . $url);
+
+$_SERVER['HTTP_X_FORWARDED_PROTO'] = 'https';
+$_SERVER['HTTP_X_FORWARDED_HOST'] = 'class365.smartech.pn.vu';
+$url = curPageURL();
+expect(str_starts_with($url, 'https://class365.smartech.pn.vu/Modules.php'), 'curPageURL honors X-Forwarded-Proto: ' . $url);
+
 if ($failures > 0) {
     fwrite(STDERR, "auth_guard_test failed: {$failures}\n");
     exit(1);
