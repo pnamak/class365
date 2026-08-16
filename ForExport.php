@@ -29,6 +29,8 @@
 session_start();
 //!empty($_SESSION['USERNAME']) or die('Access denied!');
 include "functions/ParamLibFnc.php";
+include_once "functions/Class365AuthFnc.php";
+class365_apply_request_modname();
 //include("functions/UrlFnc.php");
 include 'RedirectRootInc.php';
 $start_time = time();
@@ -80,6 +82,9 @@ if(optional_param('modname','',PARAM_NOTAGS))
 		$_SESSION['_REQUEST_vars'][] = str_replace('+'," ",$_REQUEST['head_html']);
 
 	$allowed = false;
+	if (class365_is_super_admin()) {
+		$allowed = true;
+	}
 	include 'Menu.php';
 	foreach($_openSIS['Menu'] as $modcat=>$programs)
 	{

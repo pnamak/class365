@@ -48,6 +48,23 @@ $_SERVER['HTTP_X_FORWARDED_HOST'] = 'class365.smartech.pn.vu';
 $url = curPageURL();
 expect(str_starts_with($url, 'https://class365.smartech.pn.vu/Modules.php'), 'curPageURL honors X-Forwarded-Proto: ' . $url);
 
+$_REQUEST['modname'] = 'schoolsetup/Periods.php ';
+expect(validateQueryString('https://class365.smartech.pn.vu/Ajax.php?modname=schoolsetup/Periods.php%20') === true, 'percent-encoded menu space is allowed');
+expect(validateQueryString('https://class365.smartech.pn.vu/Ajax.php?modname=<script>alert(1)</script>') === false, 'script tag in URL is rejected');
+
+$_REQUEST['modname'] = 'schoolsetup/Periods.php ';
+class365_apply_request_modname();
+expect($_REQUEST['modname'] === 'schoolsetup/Periods.php', 'modname trailing space is trimmed');
+
+$_SESSION = ['PROFILE_ID' => 0, 'STAFF_ID' => 1];
+expect(class365_is_super_admin(), 'session profile 0 is super admin');
+$_SESSION = ['PROFILE_ID' => '0', 'STAFF_ID' => 1];
+expect(class365_is_super_admin(), 'session profile string 0 is super admin');
+$_SESSION = ['PROFILE_ID' => 1, 'STAFF_ID' => 2];
+expect(!class365_is_super_admin(), 'administrator profile 1 is not super admin');
+$_SESSION = [];
+expect(!class365_is_super_admin(), 'empty session is not super admin');
+
 if ($failures > 0) {
     fwrite(STDERR, "auth_guard_test failed: {$failures}\n");
     exit(1);
