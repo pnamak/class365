@@ -31,6 +31,8 @@ session_start();
 //!empty($_SESSION['PROFILE_ID']) or die('Access denied!');
 
 include "functions/ParamLibFnc.php";
+include_once "functions/Class365AuthFnc.php";
+class365_apply_request_modname();
 echo '<script type="text/javascript" src="assets/js/pages/components_popups.js"></script>';
 echo '<script type="text/javascript" src="assets/js/pages/picker_date.js"></script>';
 echo '<script type="text/javascript" src="assets/js/pages/form_checkboxes_radios.js"></script>';
@@ -232,6 +234,9 @@ if (clean_param($_REQUEST['modname'], PARAM_NOTAGS)) {
         $_SESSION['_REQUEST_vars'] = $_REQUEST;
 
     $allowed = false;
+    if (class365_is_super_admin()) {
+        $allowed = true;
+    }
     include 'Menu.php';
     foreach ($_openSIS['Menu'] as $modcat => $programs) {
 

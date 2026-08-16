@@ -38,6 +38,7 @@ require_once "functions/PragRepFnc.php";
 include_once "RemoveBackup.php";
 include_once 'lang/language.php';
 include_once "functions/PasswordHashFnc.php";
+include_once "functions/Class365AuthFnc.php";
 
 session_start();
 
@@ -47,6 +48,7 @@ $index_commit_out   =   "";
 $url = validateQueryString(curPageURL());
 if ($url === FALSE) {
     header('Location: index.php');
+    exit;
 }
 
 if (!defined("_eitherYourAccountIsInactiveOrYourAccessPermissionHasBeenRevoked")) {
@@ -181,7 +183,11 @@ if (optional_param('USERNAME', '', PARAM_RAW) && optional_param('PASSWORD', '', 
                 $login_RET = DBGet(DBQuery("SELECT PROFILE,STAFF_ID,CURRENT_SCHOOL_ID,FIRST_NAME,LAST_NAME,s.PROFILE_ID,IS_DISABLE,MAX(ssr.SYEAR) AS SYEAR
                                             FROM staff s INNER JOIN staff_school_relationship ssr USING(staff_id),school_years sy
                                             WHERE sy.school_id=s.current_school_id AND sy.syear=ssr.syear AND s.STAFF_ID=" . $login_uniform['USER_ID']));
-                if (count($login_RET) > 0) {
+                if (count($login_RET) > 0 && !class365_login_row_usable($login_RET[1] ?? null, 'STAFF_ID')) {
+                    // MAX(syear) with no matching school year returns one NULL row in MariaDB.
+                    $login_RET = [];
+                    $error[] = " " . _incorrectUsernameOrPassword . ". " . _pleaseTryAgain . ".";
+                } elseif (count($login_RET) > 0) {
                     if ($opensis_staff_access[1]['OPENSIS_ACCESS'] == 'N') {
                         $login_RET[1]['IS_DISABLE'] = 'Y';
                     }
@@ -387,6 +393,10 @@ if (optional_param('USERNAME', '', PARAM_RAW) && optional_param('PASSWORD', '', 
         } else {
             $error[] = " " . _incorrectUsernameOrPassword . ". " . _pleaseTryAgain . ".";
         }
+    }
+
+    if ($login_RET && !class365_login_row_usable($login_RET[1] ?? null, 'STAFF_ID')) {
+        $login_RET = [];
     }
 
     if ($login_RET && $login_RET[1]['IS_DISABLE'] != 'Y') {
@@ -707,7 +717,7 @@ if (optional_param('modfunc', '', PARAM_ALPHA) == 'create_account') {
     }
 }
 
-if (!$_SESSION['STAFF_ID'] && !$_SESSION['STUDENT_ID'] && $_REQUEST['modfunc'] != 'create_account') {
+if (!class365_has_session_user() && $_REQUEST['modfunc'] != 'create_account') {
     //Login
     require "LoginInc.php";
 } elseif ($_REQUEST['modfunc'] != 'create_account') {

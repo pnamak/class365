@@ -48,8 +48,8 @@ if (!defined('CONFIG_INC')) {
     $version_sql = "select value from app where name='version'";
     $version_res = DBQuery($version_sql);
     $version_row = DBGet($version_res);
-    $openSISVersion = $version_row[1]['VALUE'];
-    $builddate = $b_date_row[1]['VALUE'];
+    $openSISVersion = $version_row[1]['VALUE'] ?? '9.3';
+    $builddate = $b_date_row[1]['VALUE'] ?? '';
     $htmldocPath = "";
     $OutputType = "HTML"; //options are HTML or PDF
     $htmldocPath = '';

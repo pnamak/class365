@@ -38,7 +38,7 @@ if (!$_openSIS['Menu']) {
 	$profile = User('PROFILE');
 
 	if ($profile != 'student')
-		if (User('PROFILE_ID') != '') {
+		if (User('PROFILE_ID') !== '' && User('PROFILE_ID') !== null) {
 
 			$can_use_RET = DBGet(DBQuery("SELECT MODNAME FROM profile_exceptions WHERE PROFILE_ID='" . User('PROFILE_ID') . "' AND CAN_USE='Y'"), array(), array('MODNAME'));
 		} else {
