@@ -40,7 +40,7 @@ function AllowEdit($modname = false)
 
         if (!$_openSIS['AllowEdit']) {
 
-            if (User('PROFILE_ID') != '') {
+            if (User('PROFILE_ID') !== '' && User('PROFILE_ID') !== null) {
                 $_openSIS['AllowEdit'] = DBGet(DBQuery('SELECT MODNAME FROM profile_exceptions WHERE PROFILE_ID=\'' . User('PROFILE_ID') . '\' AND CAN_EDIT=\'Y\''), array(), array('MODNAME'));
             } else {
                 $profile_id_mod = DBGet(DBQuery("SELECT PROFILE_ID FROM staff WHERE USER_ID='" . User('STAFF_ID')));
@@ -139,7 +139,7 @@ function AllowUse($modname = false)
         $modname = $modname . '&category_id=' . $_REQUEST['category_id'];
 
     if (!$_openSIS['AllowUse']) {
-        if (User('PROFILE_ID') != '') {
+        if (User('PROFILE_ID') !== '' && User('PROFILE_ID') !== null) {
             $_openSIS['AllowUse'] = DBGet(DBQuery('SELECT MODNAME FROM profile_exceptions WHERE PROFILE_ID=\'' . User('PROFILE_ID') . '\' AND CAN_USE=\'Y\''), array(), array('MODNAME'));
 
             if (User('PROFILE_ID') == 4) {

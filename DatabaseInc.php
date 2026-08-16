@@ -57,8 +57,13 @@ function db_start()
 
 
 ##### Connection help #####
-if (!empty($DatabaseServer) && !empty($DatabaseUsername) && !empty($DatabaseName))
-    $connection = mysqli_connect($DatabaseServer, $DatabaseUsername, $DatabasePassword, $DatabaseName);
+if (!empty($DatabaseServer) && !empty($DatabaseUsername) && !empty($DatabaseName)) {
+    try {
+        $connection = @mysqli_connect($DatabaseServer, $DatabaseUsername, $DatabasePassword, $DatabaseName);
+    } catch (Throwable $e) {
+        $connection = false;
+    }
+}
 
     if ($connection) {
         $result = $connection->query("SHOW VARIABLES WHERE VARIABLE_NAME = 'event_scheduler'");
@@ -114,6 +119,9 @@ function DBQuery($sql)
     } else {
         $userId = '';
     }
+    if (!($connection instanceof mysqli)) {
+        return false;
+    }
     if (!empty($userId))
         $connection->query("set @userId= $userId;");
     switch ($DatabaseType) {
@@ -162,8 +170,11 @@ function DBQuery($sql)
                 if (isset($user_agent[0]) && $user_agent[0] === 'Mozilla') {
                     try {
                         $result = $connection->query($sql);
-                    } catch (Exception $e) {
-                        die(db_show_error($sql, _dbExecuteFailed, mysqli_error($connection)));
+                    } catch (Throwable $e) {
+                        if (function_exists('PopTable')) {
+                            die(db_show_error($sql, _dbExecuteFailed, mysqli_error($connection)));
+                        }
+                        return false;
                     }
                 }
             }

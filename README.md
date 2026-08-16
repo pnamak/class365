@@ -21,7 +21,7 @@ Open http://localhost:8080
 | Field | Value |
 | --- | --- |
 | Username | `admin` |
-| Password | `demo123` |
+| Password | `admin123` |
 
 ## Coolify deploy
 
